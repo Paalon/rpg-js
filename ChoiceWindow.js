@@ -6,8 +6,6 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-//let Choice = require('./Choice.js');
-
 module.exports = class ChoiceWindow extends PIXI.Container {
   constructor(choices, selected_style, unselected_style, window_option) {
     super();
