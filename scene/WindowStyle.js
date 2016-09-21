@@ -4,6 +4,8 @@
 // class WindowStyle
 //
 
+let PIXI = require('pixi.js/bin/pixi.js');
+
 let WINDOW = require('../WindowSetting.js');
 
 module.exports = class WindowStyle {
@@ -26,5 +28,7 @@ module.exports = class WindowStyle {
     else this.frame_color = options.frame_color;
     if (this.frame_alpha == undefined) this.frame_alpha = 0.8;
     else this.frame_alpha = options.frame_alpha;
+    //this.selected_style = new PIXI.TextStyle(options.selected_style);
+    this.unselected_style = new PIXI.TextStyle(options.unselected_style);
   }
 };
