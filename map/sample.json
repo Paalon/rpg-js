@@ -1,0 +1,17 @@
+{
+  "name": "sample",
+  "size": {"x": 52, "y": 32},
+  "tileId": {
+    "0": "void",
+    "1": "sea",
+    "2": "stone",
+    "3": "grass",
+    "4": "dirt",
+    "5": "cloud"
+  },
+  "tileSize": 16,
+  "tile": {
+    "view": "./map/sample.csv",
+    "collision": "./map/sampleCollision.csv"
+  }
+}

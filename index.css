@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "mplus";
+  src: "./font/mplus-1p-medium.ttf";
+}
+body {
+  margin: 0px;
+  padding: 0px;
+  background: #bdf;
+}
