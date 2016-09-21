@@ -6,10 +6,10 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-let WindowSetting = require('../WindowsSetting.js');
+let WINDOW = require('../WindowSetting.js');
 
 module.exports = class WindowPoint extends PIXI.Point {
   constructor(x, y) {
-    super(WindowSetting.WIDTH * x, WindowSetting.HEIGHT * y);
+    super(WINDOW.WIDTH * x, WINDOW.HEIGHT * y);
   }
 };

@@ -154,50 +154,23 @@ module.exports = class Battle extends Scene { // gstateに依存
     this.addChild(this.sentakushi);
 
     // keyboard
-    this.keyboard.down = new Keyboard(
-      'down',
-      () => {
-        this.sentakushi.next();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {});
-    this.keyboard.up = new Keyboard(
-      'up',
-      () => {
-        this.sentakushi.back();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
-    this.keyboard.right = new Keyboard(
-      'right',
-      () => {},
-      () => {}
-    );
-    this.keyboard.left = new Keyboard(
-      'left',
-      () => {},
-      () => {}
-    );
-    this.keyboard.enter = new Keyboard(
-      'enter',
-      () => {
-        this.sentakushi.selected.done();
-      },
-      () => {}
-    );
-    this.keyboard.z = new Keyboard(
-      'z',
-      () => {
-        this.sentakushi.selected.done();
-      },
-      () => {}
-    );
-    this.keyboard.x = new Keyboard(
-      'x',
-      () => {},
-      () => {}
-    );
+    this.addKeyboard('down', () => {
+      this.sentakushi.next();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('up', () => {
+      this.sentakushi.back();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('right', () => {}, () => {});
+    this.addKeyboard('left', () => {}, () => {});
+    this.addKeyboard('enter', () => {
+      this.sentakushi.selected.done();
+    }, () => {});
+    this.addKeyboard('z', () => {
+      this.sentakushi.selected.done();
+    }, () => {});
+    this.addKeyboard('x', () => {}, () => {});
   }
   update() {
     this.text.playerHP.text = 'HP: ' + this.player.hp + ' / ' + this.player.def_hp;
@@ -219,27 +192,18 @@ module.exports = class Battle extends Scene { // gstateに依存
     }
   }
   play() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].bind();
-    }
-    //this.text.battle.interactive = true;
-    //this.text.back.interactive = true;
+    this.bindAllKeys();
+    this.activate();
     this.sound.bgm.lake_in_the_morning_mist.play();
   }
   stop() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
-    //this.text.battle.interactive = false;
-    //this.text.back.interactive = false;
+    this.unbindAllKeys();
+    this.inactivate();
     this.sound.bgm.lake_in_the_morning_mist.stop();
   }
   pause() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
-    //this.text.battle.interactive = false;
-    //this.text.back.interactive = false;
+    this.unbindAllKeys();
+    this.inactivate();
     this.sound.bgm.lake_in_the_morning_mist.pause();
   }
   win() {

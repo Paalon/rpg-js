@@ -12,7 +12,6 @@ let WINDOW = require('../WindowSetting.js');
 let Scene = require('./Scene.js');
 let DirectionalTextures = require('./DirectionalTextures.js');
 let FileUtil = require('../FileUtil.js');
-let Keyboard = require('../Keyboard.js');
 let Human = require('./Human.js');
 let SCO = require('./SceneChangeOption.js');
 
@@ -114,18 +113,20 @@ module.exports = class Field extends Scene {
 
     // keyboard
     this.addKeyboard('down', () => {}, () => {});
-    this.keyboard.down = new Keyboard('down', () => {}, () => {});
-    this.keyboard.up = new Keyboard('up', () => {}, () => {});
-    this.keyboard.right = new Keyboard('right', () => {}, () => {});
-    this.keyboard.left = new Keyboard('left', () => {}, () => {});
-    this.keyboard.esc = new Keyboard('esc', () => {
+    this.addKeyboard('up', () => {}, () => {});
+    this.addKeyboard('right', () => {}, () => {});
+    this.addKeyboard('left', () => {}, () => {});
+    this.addKeyboard('esc', () => {
       this.changeScene([new SCO('freeze', 'FieldMenu')]);
       this.sound.fx.gun_hit.play();
     }, () => {});
-    this.keyboard.e = new Keyboard('e', () => {
+    this.addKeyboard('e', () => {
       this.changeScene([new SCO('freeze', 'FieldMenu')]);
       this.sound.fx.gun_hit.play();
     }, () => {});
+    this.addKeyboard('enter', () => {}, () => {});
+    this.addKeyboard('z', () => {}, () => {});
+    this.addKeyboard('x', () => {}, () => {});
   }
   update() {
     switch (this.isFade) {

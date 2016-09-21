@@ -8,9 +8,10 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-let WINDOW = require('../WindowSetting.js');
+//let WINDOW = require('../WindowSetting.js');
 let Scene = require('./Scene.js');
 let sco = require('./SceneChangeOption.js');
+let WindowPoint = require('./WindowPoint.js');
 
 module.exports = class Title extends Scene {
   constructor(info) {
@@ -20,7 +21,7 @@ module.exports = class Title extends Scene {
     // textTitle
     let textTitle = this.textTitle = new PIXI.Text('てきとうRPG', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
     textTitle.anchor.set(0.5, 0.5);
-    textTitle.position.set(this.width * 0.5, this.height * 0.4);
+    textTitle.position = new WindowPoint(0.5, 0.4);
     textTitle.on('click', () => {
       this.sound.fx.collision.play();
     });
@@ -30,7 +31,7 @@ module.exports = class Title extends Scene {
     // buttonStart
     let buttonStart = this.buttonStart = new PIXI.Text('PRESS ENTER', {fontFamily: 'mplus', fontSize: 12, fill: 0xffffff, align: 'center'});
     buttonStart.anchor.set(0.5, 0.5);
-    buttonStart.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0.6);
+    buttonStart.position = new WindowPoint(0.5, 0.6);
     buttonStart.on('click', () => { // fieldMapシーンへ遷移
       this.changeScene([new sco('transit', 'Field')]);
     });
