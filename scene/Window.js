@@ -18,6 +18,7 @@ module.exports = class Window extends PIXI.Graphics {
     this.drawRect(style.x, style.y, style.width, style.height);
     this.keyboard = {}; // キーボード操作
     this.contents = {}; // 並べる要素を指定するオブジェクト
+    this.style = style;
   }
   init() {
   }
