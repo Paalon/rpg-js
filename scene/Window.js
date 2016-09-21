@@ -6,25 +6,43 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-module.exports = class Window extends PIXI.Container {
-  constructor(options) {
+let WindowStyle = require('./WindowStyle.js');
+let Keyboard = require('../Keyboard.js');
+
+module.exports = class Window extends PIXI.Graphics {
+  constructor(styleObj) {
+    let style = new WindowStyle(styleObj); // styleObj解析
     super();
-    this.keyboard = options.keyboard; // キーボード操作
-    this.content = options.content;
-    this.style = options.style;
+    this.beginFill(style.main_color, style.main_alpha);
+    this.lineStyle(style.frame_width, style.frame_color, style.frame_alpha);
+    this.drawRect(style.x, style.y, style.width, style.height);
+    this.keyboard = {}; // キーボード操作
+    this.contents = {}; // 並べる要素を指定するオブジェクト
   }
   init() {
   }
-  updateGlobal() {
-
+  finish() {
   }
-  updateLocal() {
-
-  }
-  stop() {
+  play() {
   }
   pause() {
   }
-  play() {
+  updateGlobal() {
+  }
+  updateLocal() {
+  }
+  addKeyboard(keyName, pressed, released) {
+    // todo: keyboardjsに合わせてkeyNameを解析してfixしたほうがいいかも + Keyboard.jsも
+    this.keyboard[keyName] = new Keyboard(keyName, pressed, released);
+  }
+  bindAllKeys() { // すべてのキーボードをバインドする。
+    for (let key in this.keyboard) {
+      this.keyboard[key].bind();
+    }
+  }
+  unbindAllKeys() { // すべてのキーボードをアンバインドする。
+    for (let key in this.keyboard) {
+      this.keyboard[key].unbind();
+    }
   }
 };
