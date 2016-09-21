@@ -85,62 +85,33 @@ module.exports = class FieldMenu extends Scene { // gstateに依存
     this.text.addChild(this.text.playerStatus);
 
     // keyboard
-    this.keyboard.down = new Keyboard(
-      'down',
-      () => {
-        this.sentakushi.next();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {});
-    this.keyboard.up = new Keyboard(
-      'up',
-      () => {
-        this.sentakushi.back();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
-    this.keyboard.right = new Keyboard(
-      'right',
-      () => {},
-      () => {}
-    );
-    this.keyboard.left = new Keyboard(
-      'left',
-      () => {},
-      () => {}
-    );
-    this.keyboard.enter = new Keyboard(
-      'enter',
-      () => {
-        this.sentakushi.selected.done();
-      },
-      () => {}
-    );
-    this.keyboard.esc = new Keyboard('esc', () => {
+    this.addKeyboard('down', () => {
+      this.sentakushi.next();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('up', () => {
+      this.sentakushi.back();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('right', () => {}, () => {});
+    this.addKeyboard('left', () => {}, () => {});
+    this.addKeyboard('enter', () => {this.sentakushi.selected.done();}, () => {});
+    this.addKeyboard('esc', () => {
       this.changeScene([new sco('unfreeze', null)]);
       this.sound.fx.gun_fire.play();
     }, () => {});
-    this.keyboard.e = new Keyboard('e', () => {
+    this.addKeyboard('e', () => {
       this.changeScene([new sco('unfreeze', null)]);
       this.sound.fx.gun_fire.play();
     }, () => {});
-    this.keyboard.z = new Keyboard(
-      'z',
-      () => {
-        this.sentakushi.selected.done();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
-    this.keyboard.x = new Keyboard(
-      'x',
-      () => {
-        this.changeScene([new sco('unfreeze', null)]);
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
+    this.addKeyboard('z', () => {
+      this.sentakushi.selected.done();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('x', () => {
+      this.changeScene([new sco('unfreeze', null)]);
+      this.sound.fx.gun_fire.play();
+    }, () => {});
   }
   update() {
   }

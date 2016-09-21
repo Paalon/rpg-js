@@ -25,6 +25,7 @@ module.exports = class Title extends Scene {
     textTitle.on('click', () => {
       this.sound.fx.collision.play();
     });
+    this.addInteractor(textTitle);
     this.addChild(textTitle);
 
     // buttonStart
@@ -34,16 +35,17 @@ module.exports = class Title extends Scene {
     buttonStart.on('click', () => { // fieldMapシーンへ遷移
       this.changeScene([new sco('transit', 'Field')]);
     });
+    this.addInteractor(buttonStart);
     this.addChild(buttonStart);
 
     // keyboard
-    this.keyboard.enter = new Keyboard('enter', () => {
+    this.addKeyboard('enter', () => {
       this.changeScene([new sco('transit', 'Field')]);
     }, () => {});
-    this.keyboard.down = new Keyboard('down', () => {}, () => {});
-    this.keyboard.up = new Keyboard('up', () => {}, () => {});
-    this.keyboard.right = new Keyboard('right', () => {}, () => {});
-    this.keyboard.left = new Keyboard('left', () => {}, () => {});
+    this.addKeyboard('down', () => {}, () => {});
+    this.addKeyboard('up', () => {}, () => {});
+    this.addKeyboard('right', () => {}, () => {});
+    this.addKeyboard('left', () => {}, () => {});
   }
   update() {
     if (this.keyboard.down.isDown) {
@@ -60,18 +62,15 @@ module.exports = class Title extends Scene {
     }
   }
   play() {
-    this.textTitle.interactive = true;
-    this.buttonStart.interactive = true;
+    this.activate();
     this.bindAllKeys();
   }
   stop() {
-    this.textTitle.interactive = false;
-    this.buttonStart.interactive = false;
+    this.inactivate();
     this.unbindAllKeys();
   }
   pause() {
-    this.textTitle.interactive = false;
-    this.buttonStart.interactive = false;
+    this.inactivate();
     this.unbindAllKeys();
   }
 };

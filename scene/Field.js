@@ -98,7 +98,7 @@ module.exports = class Field extends Scene {
     this.debug.battle = new PIXI.Text('Battle');
     this.debug.addChild(this.debug.battle);
     this.debug.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0);
-    this.interactors.push(this.debug.battle);
+    this.addInteractor(this.debug.battle);
     this.debug.battle.on('click', () => {
       this.changeScene([new SCO('freeze', 'Battle')]);
       //this.freeze('Battle', null);
@@ -245,23 +245,17 @@ module.exports = class Field extends Scene {
 
   play() {
     this.fadeIn();
-    for (let key in this.keyboard) {
-      this.keyboard[key].bind();
-    }
+    this.bindAllKeys();
     this.activate();
     this.sound.bgm.main.play();
   }
   stop() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.unbindAllKeys();
     this.inactivate();
     this.sound.bgm.main.stop();
   }
   pause() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.unbindAllKeys();
     this.inactivate();
     this.sound.bgm.main.pause();
   }

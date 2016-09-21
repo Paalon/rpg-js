@@ -9,6 +9,7 @@
 let PIXI = require('pixi.js/bin/pixi.js');
 
 let WindowStack = require('./WindowStack.js');
+let Keyboard = require('../Keyboard.js');
 
 module.exports = class Scene extends PIXI.Container { // gstateに依存
   constructor(info) {
@@ -19,7 +20,7 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
       info: null // 次のシーンの生成情報
     };
     this.fade = {};
-    this.interactors = []; // 止めたり再生したりするもの
+    this.interactor = []; // 止めたり再生したりするもの
     this.next_scene;
     this.next_info;
     this.info = info;
@@ -49,17 +50,20 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   pause() { // 停止処理（bgm）
 
   }
-  activate() {
-    this.interactors.map((interactor) => {interactor.interactive = true;} );
+  addInteractor(interactor) { // インタラクタに追加する。
+    this.interactor.push(interactor);
   }
-  inactivate() {
-    this.interactors.map((interactor) => {interactor.interactive = false;} );
+  activate() { // activate interactors
+    this.interactor.map((interactor) => {interactor.interactive = true;} );
   }
-  // シーン遷移
-  changeScene(options) {
+  inactivate() { // inactivate interactors
+    this.interactor.map((interactor) => {interactor.interactive = false;} );
+  }
+  changeScene(options) { // シーン遷移
     this.change.isDoing = true;
     this.change.options = options;
   }
+  /*
   transit(next_scene_name, info) { // 遷移処理
     this.change.isDoing = true;
     this.change.way = 'transit';
@@ -76,13 +80,17 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.change.isDoing = true;
     this.change.way = 'unfreeze';
     this.change.info = info;
+  }*/
+
+  addKeyboard(keyName, pressed, released) {
+    this.keyboard[keyName] = new Keyboard(keyName, pressed, released);
   }
-  bindAllKeys() {
+  bindAllKeys() { // すべてのキーボードをバインドする。
     for (let key in this.keyboard) {
       this.keyboard[key].bind();
     }
   }
-  unbindAllKeys() {
+  unbindAllKeys() { // すべてのキーボードをアンバインドする。
     for (let key in this.keyboard) {
       this.keyboard[key].unbind();
     }
