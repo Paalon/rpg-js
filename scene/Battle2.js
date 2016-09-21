@@ -1,7 +1,7 @@
-// Battle.js
+// Battle2.js
 // Copyright 2016 Paalon
 //
-// class Battle
+// class Battle2
 //
 
 'use strict';
@@ -16,7 +16,7 @@ let ChoiceWindow = require('../ChoiceWindow.js');
 let sco = require('./SceneChangeOption.js');
 let FileUtil = require('../FileUtil.js');
 
-module.exports = class Battle extends Scene { // gstateに依存
+module.exports = class Battle2 extends Scene { // gstateに依存
   constructor(info) {
     super(info);
     // 背景
@@ -77,6 +77,7 @@ module.exports = class Battle extends Scene { // gstateに依存
     this.text.addChild(this.text.enemyHP);
     this.text.addChild(this.text.enemyMP);
 
+    // sentakushi window
     let selected_style = new PIXI.TextStyle({fontSize: 10, fill: 0x990099});
     let unselected_style = new PIXI.TextStyle({fontSize: 10, fill: 0xffffff});
 
@@ -101,18 +102,6 @@ module.exports = class Battle extends Scene { // gstateに依存
       '魔法', selected_style, unselected_style,
       () => {
         this.changeScene([new sco('freeze', 'BattleMahou')]);
-        /*
-        this.sound.fx.gun_fire.play();
-        let dmg_enemy = this.player.mahou(this.enemy);
-        let dmg_player = this.enemy.attack(this.player);
-        this.text.console.text = '敵に' + dmg_enemy + 'のダメージ\n自分に' + dmg_player +'のダメージ';
-        if (this.player.hp <= 0) {
-          this.changeScene([new sco('unfreeze', null), new sco('transit', 'GameOver')]);
-        }
-        if (this.enemy.hp <= 0) {
-          this.changeScene([new sco('unfreeze', null)]);
-        }
-        */
       }
     );
     let nigeru = new Choice(
@@ -122,7 +111,7 @@ module.exports = class Battle extends Scene { // gstateに依存
       }
     );
     // 選択肢
-    this.sentakushi = new ChoiceWindow(
+    let sentakushi = new ChoiceWindow(
       [tatakau, mahou, nigeru],
       selected_style,
       unselected_style,
@@ -133,7 +122,7 @@ module.exports = class Battle extends Scene { // gstateに依存
         height: WINDOW.HEIGHT * 0.39
       }
     );
-    this.addChild(this.sentakushi);
+    this.addWindow(sentakushi);
 
     // keyboard
     this.addKeyboard('down', () => {
