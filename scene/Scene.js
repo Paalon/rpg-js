@@ -8,6 +8,8 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
+let WindowStack = require('./WindowStack.js');
+
 module.exports = class Scene extends PIXI.Container { // gstateに依存
   constructor(info) {
     super(); // PIXI.Container
@@ -24,6 +26,7 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.sound = undefined;
     this.status = undefined;
     this.keyboard = {}; // キーボード
+    this.window = new WindowStack(this);
   }
   init() { // 初期化処理
 

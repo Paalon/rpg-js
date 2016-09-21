@@ -9,8 +9,8 @@
 let PIXI = require('pixi.js/bin/pixi.js');
 
 module.exports = class WindowsStack {
-  constructor(root_container) {
-    this._stack = [root_container];
+  constructor(root_scene) {
+    this._stack = [root_scene];
   }
   freeze(window) {
     this._stack.top().pause();

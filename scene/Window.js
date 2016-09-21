@@ -14,7 +14,6 @@ module.exports = class Window extends PIXI.Container {
     this.style = options.style;
   }
   init() {
-
   }
   stop() {
   }
