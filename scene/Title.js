@@ -62,22 +62,16 @@ module.exports = class Title extends Scene {
   play() {
     this.textTitle.interactive = true;
     this.buttonStart.interactive = true;
-    for (let key in this.keyboard) {
-      this.keyboard[key].bind();
-    }
+    this.bindAllKeys();
   }
   stop() {
     this.textTitle.interactive = false;
     this.buttonStart.interactive = false;
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.unbindAllKeys();
   }
   pause() {
     this.textTitle.interactive = false;
     this.buttonStart.interactive = false;
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.unbindAllKeys();
   }
 };

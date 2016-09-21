@@ -1,4 +1,4 @@
-let sco = require('./scene/SceneChangeOption.js');
+let a = [1, 2, 3];
 
-let options = sco.make(['freeze', 'title', 'unfreeze', null]);
-console.log(options);
+a = a.map(item => --item);
+console.log(a);

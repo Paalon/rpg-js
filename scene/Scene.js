@@ -26,13 +26,19 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.sound = undefined;
     this.status = undefined;
     this.keyboard = {}; // キーボード
-    this.window = new WindowStack(this);
+    this.window = new WindowStack(this); // Winowスタック
+    this.lifetimed = [];
   }
   init() { // 初期化処理
 
   }
   update() { // 更新処理
-
+  }
+  updateLifeTimed() {
+    this.lifetimed.map(n => --n);
+  }
+  addLifeTimed(lifetimed) {
+    this.lifetimed.push(lifetimed);
   }
   stop() { // 終了処理（bgm）
 
@@ -70,5 +76,15 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.change.isDoing = true;
     this.change.way = 'unfreeze';
     this.change.info = info;
+  }
+  bindAllKeys() {
+    for (let key in this.keyboard) {
+      this.keyboard[key].bind();
+    }
+  }
+  unbindAllKeys() {
+    for (let key in this.keyboard) {
+      this.keyboard[key].unbind();
+    }
   }
 };

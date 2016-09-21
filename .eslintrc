@@ -16,7 +16,7 @@
   "rules": {
     "semi": 2,
     "arrow-body-style": 2,
-    "arrow-parens": 2,
+    "arrow-parens": 0,
     "arrow-spacing": 2,
     "generator-star-spacing": 2,
     "no-useless-constructor": 0,
