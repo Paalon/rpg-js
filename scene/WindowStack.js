@@ -4,11 +4,6 @@
 // class WindowsStack
 //
 
-// 途中
-// Sceneのlifetimedを更新する。
-
-let PIXI = require('pixi.js/bin/pixi.js');
-
 module.exports = class WindowsStack {
   constructor(root_scene) {
     this._stack = [root_scene];
@@ -19,23 +14,28 @@ module.exports = class WindowsStack {
     }
     this.top().updateLocal();
   }
-  freeze(window) {
+  freeze(next_window) {
     this._stack.top().pause();
-    this._stack.push(window);
+    this._stack.push(next_window);
     this._stack.top().init();
   }
   unfreeze() {
     if (this._stack.length == 0) {
       throw new Error("解凍するウィンドウがないよ。");
     } else {
-      let window = this._stack.pop();
+      let old_window = this._stack.pop();
+      old_window.finish();
+      this._stack.top().play();
     }
   }
-  transit() {
+  transit(next_window) {
     if (this._stack.length == 0) {
       throw new Error('解凍するウィンドウがないよ。');
     } else {
-      this._stack.pop();
+      let old_window = this._stack.pop();
+      old_window.finish();
+      this._stack.push(next_window);
+      this._stack.top().init();
     }
   }
   top() {
