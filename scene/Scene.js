@@ -8,6 +8,7 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
+let WindowSetting = require('../WindowSetting.js');
 let WindowStack = require('./WindowStack.js');
 let Keyboard = require('../Keyboard.js');
 
@@ -29,9 +30,10 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.keyboard = {}; // キーボード
     this.window = new WindowStack(this); // Winowスタック
     this.lifetimed = [];
+    this.WINDOW_WIDTH = WindowSetting.WIDTH;
+    this.WINDOW_HEIGHT = WindowSetting.HEIGHT;
   }
   init() { // 初期化処理
-
   }
   update() { // 更新処理
   }

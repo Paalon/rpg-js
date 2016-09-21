@@ -10,7 +10,6 @@ let PIXI = require('pixi.js/bin/pixi.js');
 
 let WINDOW = require('../WindowSetting.js');
 let Scene = require('./Scene.js');
-let Keyboard = require('../Keyboard.js');
 let sco = require('./SceneChangeOption.js');
 
 module.exports = class Title extends Scene {
@@ -21,7 +20,7 @@ module.exports = class Title extends Scene {
     // textTitle
     let textTitle = this.textTitle = new PIXI.Text('てきとうRPG', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
     textTitle.anchor.set(0.5, 0.5);
-    textTitle.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0.4);
+    textTitle.position.set(this.width * 0.5, this.height * 0.4);
     textTitle.on('click', () => {
       this.sound.fx.collision.play();
     });

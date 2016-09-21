@@ -113,6 +113,7 @@ module.exports = class Field extends Scene {
     this.addChild(this.fade);
 
     // keyboard
+    this.addKeyboard('down', () => {}, () => {});
     this.keyboard.down = new Keyboard('down', () => {}, () => {});
     this.keyboard.up = new Keyboard('up', () => {}, () => {});
     this.keyboard.right = new Keyboard('right', () => {}, () => {});

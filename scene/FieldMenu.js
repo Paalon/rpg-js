@@ -10,7 +10,6 @@ let PIXI = require('pixi.js/bin/pixi.js');
 
 let WINDOW = require('../WindowSetting.js');
 let Scene = require('./Scene.js');
-let Keyboard = require('../Keyboard.js');
 let sco = require('./SceneChangeOption.js');
 let Choice = require('../Choice.js');
 let ChoiceWindow = require('../ChoiceWindow.js');
@@ -116,23 +115,17 @@ module.exports = class FieldMenu extends Scene { // gstateに依存
   update() {
   }
   play() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].bind();
-    }
+    this.bindAllKeys();
     this.activate();
     this.sound.bgm.main.play();
   }
   stop() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.unbindAllKeys();
     this.inactivate();
     this.sound.bgm.main.pause();
   }
   pause() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.bindAllKeys();
     this.inactivate();
     this.sound.bgm.main.pause();
   }
