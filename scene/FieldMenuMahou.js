@@ -28,12 +28,13 @@ module.exports = class FieldMenuMahou extends Scene {
       this.player.hp += 200;
       if (this.player.hp > this.player.def_hp) this.player.hp = this.player.def_hp;
     });
+    let olov = new Choice('オロフ', selected_style, unselected_style, () => {});
     let modoru = new Choice('戻る', selected_style, unselected_style, () => {
       this.changeScene([new sco('unfreeze', null)]);
     });
     // sentakushi
     this.sentakushi = new ChoiceWindow(
-      [shifo, modoru],
+      [shifo, olov, modoru],
       selected_style, unselected_style,
       {
         x: WINDOW.WIDTH * 0.55,
