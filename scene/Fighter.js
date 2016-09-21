@@ -10,7 +10,7 @@ let PIXI = require('pixi.js/bin/pixi.js');
 
 let FileUtil = require('../FileUtil.js');
 
-const DAMAGE_LIFETIME = 50;
+const DAMAGE_LIFETIME = 50; // ダメージの表示時間
 
 module.exports = class Fighter extends PIXI.Container {
   constructor(status) {
@@ -38,6 +38,7 @@ module.exports = class Fighter extends PIXI.Container {
     if (enemy.hp < 0) {
       enemy.hp = 0;
     }
+    // ダメージ表示
     enemy.damage.list = dmg.toString().split(''); // 数字を分割
     let num = 0;
     for (let i of enemy.damage.list) {

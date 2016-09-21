@@ -30,15 +30,14 @@ module.exports = class BattleMahou extends Scene {
       this.changeScene([new sco('unfreeze', null), new sco('unfreeze', null)]);
     });
     let olov = new Choice('オロフ', selected_style, unselected_style, () => {
-      this.sound.fx.gun_fire.play();
-      
+      this.changeScene([new sco('unfreeze', null), new sco('unfreeze', null)]);
     });
     let modoru = new Choice('戻る', selected_style, unselected_style, () => {
       this.changeScene([new sco('unfreeze', null)]);
     });
     // sentakushi
     this.sentakushi = new ChoiceWindow(
-      [shifo, modoru],
+      [shifo, olov, modoru],
       selected_style, unselected_style,
       {
         x: WINDOW.WIDTH * 0.55,
@@ -48,81 +47,49 @@ module.exports = class BattleMahou extends Scene {
       }
     );
     this.addChild(this.sentakushi);
+
     // keyboard
-    this.keyboard.down = new Keyboard(
-      'down',
-      () => {
-        this.sentakushi.next();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {});
-    this.keyboard.up = new Keyboard(
-      'up',
-      () => {
-        this.sentakushi.back();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
-    this.keyboard.right = new Keyboard(
-      'right',
-      () => {},
-      () => {}
-    );
-    this.keyboard.left = new Keyboard(
-      'left',
-      () => {},
-      () => {}
-    );
-    this.keyboard.enter = new Keyboard(
-      'enter',
-      () => {
-        this.sentakushi.selected.done();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
-    this.keyboard.esc = new Keyboard('esc', () => {
+    this.addKeyboard('down', () => {
+      this.sentakushi.next();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('up', () => {
+      this.sentakushi.back();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('right', () => {}, () => {});
+    this.addKeyboard('left', () => {}, () => {});
+    this.addKeyboard('enter', () => {
+      this.sentakushi.selected.done();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('esc', () => {
       this.changeScene([new sco('unfreeze', null)]);
       this.sound.fx.gun_fire.play();
     }, () => {});
-    this.keyboard.z = new Keyboard(
-      'z',
-      () => {
-        this.sentakushi.selected.done();
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
-    this.keyboard.x = new Keyboard(
-      'x',
-      () => {
-        this.changeScene([new sco('unfreeze', null)]);
-        this.sound.fx.gun_fire.play();
-      },
-      () => {}
-    );
+    this.addKeyboard('z', () => {
+      this.sentakushi.selected.done();
+      this.sound.fx.gun_fire.play();
+    }, () => {});
+    this.addKeyboard('x', () => {
+      this.changeScene([new sco('unfreeze', null)]);
+      this.sound.fx.gun_fire.play();
+    }, () => {});
   }
   update() {
   }
   play() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].bind();
-    }
+    this.bindAllKeys();
     this.activate();
     this.sound.bgm.lake_in_the_morning_mist.play();
   }
   stop() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.unbindAllKeys();
     this.inactivate();
     this.sound.bgm.lake_in_the_morning_mist.pause();
   }
   pause() {
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
-    }
+    this.unbindAllKeys();
     this.inactivate();
     this.sound.bgm.lake_in_the_morning_mist.pause();
   }

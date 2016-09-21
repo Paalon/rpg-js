@@ -5,12 +5,19 @@
 //
 
 // 途中
+// Sceneのlifetimedを更新する。
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
 module.exports = class WindowsStack {
   constructor(root_scene) {
     this._stack = [root_scene];
+  }
+  update() {
+    for (let win of this._stack) {
+      win.updateGlobal();
+    }
+    this.top().updateLocal();
   }
   freeze(window) {
     this._stack.top().pause();

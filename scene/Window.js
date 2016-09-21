@@ -15,6 +15,12 @@ module.exports = class Window extends PIXI.Container {
   }
   init() {
   }
+  updateGlobal() {
+
+  }
+  updateLocal() {
+
+  }
   stop() {
   }
   pause() {

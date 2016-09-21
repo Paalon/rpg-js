@@ -9,7 +9,6 @@
 let PIXI = require('pixi.js/bin/pixi.js');
 
 let WINDOW = require('../WindowSetting.js');
-let Keyboard = require('../Keyboard.js');
 let Scene = require('./Scene.js');
 let Fighter = require('./Fighter.js');
 let Choice = require('../Choice.js');
@@ -32,15 +31,12 @@ module.exports = class Battle extends Scene { // gstateに依存
     this.enemies = []; // 敵たち
     this.players = []; // 味方たち
     this.fighter = []; // 戦ってるやつ
-
-
   }
   init() { // 初期化処理
     this.player = new Fighter(this.status.player);
     this.fighter.push(this.player);
 
     // 敵
-    //
     this.enemy = new Fighter({
       hp: 1000,
       def_hp: 1000,
@@ -80,16 +76,6 @@ module.exports = class Battle extends Scene { // gstateに依存
     this.text.enemyMP.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0.1);
     this.text.addChild(this.text.enemyHP);
     this.text.addChild(this.text.enemyMP);
-
-    /*
-    this.text.back = new PIXI.Text('戦闘画面から戻る', {fontSize: 10});
-    this.text.back.anchor.set(0.5, 0.0);
-    this.text.back.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0.0);
-    this.text.back.on('click', () => {
-      this.changeScene([new sco('unfreeze', null)]);
-    });
-    this.text.addChild(this.text.back);
-    */
 
     let selected_style = new PIXI.TextStyle({fontSize: 10, fill: 0x990099});
     let unselected_style = new PIXI.TextStyle({fontSize: 10, fill: 0xffffff});

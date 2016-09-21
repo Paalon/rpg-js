@@ -8,7 +8,6 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-//let WINDOW = require('../WindowSetting.js');
 let Scene = require('./Scene.js');
 let sco = require('./SceneChangeOption.js');
 let WindowPoint = require('./WindowPoint.js');
@@ -19,7 +18,7 @@ module.exports = class Title extends Scene {
   }
   init() {
     // textTitle
-    let textTitle = this.textTitle = new PIXI.Text('てきとうRPG', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
+    let textTitle = this.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
     textTitle.anchor.set(0.5, 0.5);
     textTitle.position = new WindowPoint(0.5, 0.4);
     textTitle.on('click', () => {

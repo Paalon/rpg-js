@@ -27,15 +27,29 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.sound = undefined;
     this.status = undefined;
     this.keyboard = {}; // キーボード
-    this.window = new WindowStack(this); // Winowスタック
+    this.window = new WindowStack(this); // Windowスタック
     this.lifetimed = [];
+    this.animated = [];
   }
   init() { // 初期化処理
   }
   update() { // 更新処理
+    this.window.update();
+  }
+  updateLocal() {
+  }
+  updateGlobal() {
   }
   updateLifeTimed() {
-    this.lifetimed.map(n => --n);
+    this.lifetimed.map((n) => {
+      if (n > 0) {
+        n--;
+        if (n <= 0) {
+          this.lifetimed.stop();
+        }
+      }
+      return n;
+    });
   }
   addLifeTimed(lifetimed) {
     this.lifetimed.push(lifetimed);
@@ -82,6 +96,7 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   }*/
 
   addKeyboard(keyName, pressed, released) {
+    // todo: keyboardjsに合わせてkeyNameを解析してfixしたほうがいいかも + Keyboard.jsも
     this.keyboard[keyName] = new Keyboard(keyName, pressed, released);
   }
   bindAllKeys() { // すべてのキーボードをバインドする。
@@ -93,5 +108,8 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     for (let key in this.keyboard) {
       this.keyboard[key].unbind();
     }
+  }
+  addWindow(contents) { // ウィンドウを追加する。
+    let window;
   }
 };
