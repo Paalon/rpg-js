@@ -88,24 +88,11 @@ function animate() {
 function update() {
   let scene = sceneStack.top();
   scene.update();   // 一番上に積まれてるシーンをアップデート
-  /*
-  if (scene.change.isDoing) { // シーン遷移
-    let info = scene.change.info;
-    let next_scene = null;
-    //console.log(scene.change.way);
-    if (scene.change.way !== 'unfreeze') {
-      next_scene = new Scene[scene.change.to](info);
-      next_scene.sound = lib.sound;
-      next_scene.status = lib.status;
-    }
-    //console.log(next_scene);
-    sceneStack[scene.change.way](next_scene);
-  }*/
   if (scene.change.isDoing) { // シーン遷移
     let options = scene.change.options;
     let info = scene.change.info;
-    let next_scene = null;
     for (let option of options) {
+      let next_scene = null;
       if (option.name !== 'unfreeze') {
         next_scene = new Scene[option.to](info);
         next_scene.sound = lib.sound;
