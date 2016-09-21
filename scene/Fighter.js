@@ -10,7 +10,7 @@ let PIXI = require('pixi.js/bin/pixi.js');
 
 let FileUtil = require('../FileUtil.js');
 
-const DAMAGE_LIFETIME = 50; // ダメージの表示時間
+const DAMAGE_LIFETIME = 40; // ダメージの表示時間
 
 module.exports = class Fighter extends PIXI.Container {
   constructor(status) {
@@ -41,10 +41,12 @@ module.exports = class Fighter extends PIXI.Container {
     // ダメージ表示
     enemy.damage.list = dmg.toString().split(''); // 数字を分割
     let num = 0;
+    let rx = 40 * Math.random() - 20;
+    let ry = 40 * Math.random() - 20;
     for (let i of enemy.damage.list) {
       let textures = FileUtil.fromSpriteSheet('./img', 'damage' + i);
       let movie = new PIXI.extras.MovieClip(textures);
-      movie.position.set(9 * num++, 0);
+      movie.position.set(-8 + 9 * num++ + rx, -8 + ry);
       movie.animationSpeed = 0.5;
       movie.loop = false;
       movie.play();
