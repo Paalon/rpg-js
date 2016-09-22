@@ -15,9 +15,9 @@ module.exports = class WindowsStack {
     this.top().updateLocal();
   }
   freeze(next_window) {
-    this._stack.top().pause();
+    this.top().pause();
     this._stack.push(next_window);
-    this._stack.top().init();
+    this.top().init();
   }
   unfreeze() {
     if (this._stack.length == 0) {
@@ -25,7 +25,7 @@ module.exports = class WindowsStack {
     } else {
       let old_window = this._stack.pop();
       old_window.finish();
-      this._stack.top().play();
+      this.top().play();
     }
   }
   transit(next_window) {
@@ -35,7 +35,7 @@ module.exports = class WindowsStack {
       let old_window = this._stack.pop();
       old_window.finish();
       this._stack.push(next_window);
-      this._stack.top().init();
+      this.top().init();
     }
   }
   top() {
