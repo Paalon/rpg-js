@@ -10,6 +10,7 @@ let WINDOW = require('../WindowSetting.js');
 
 module.exports = class WindowStyle {
   constructor(options) {
+    if (options == undefined) options = {};
     if (options.x == undefined) this.x = 0;
     else this.x = options.x;
     if (options.y == undefined) this.y = 0;
