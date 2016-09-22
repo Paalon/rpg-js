@@ -32,12 +32,20 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.animated = [];
   }
   init() { // 初期化処理
+    this.bindAllKeys();
+    this.activate();
   }
   finish() {
+    this.unbindAllKeys();
+    this.inactivate();
   }
   play() {
+    this.bindAllKeys();
+    this.activate();
   }
   pause() {
+    this.unbindAllKeys();
+    this.inactivate();
   }
   update() { // 更新処理
     this.window_stack.update();
