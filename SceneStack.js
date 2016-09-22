@@ -24,7 +24,7 @@ module.exports = class SceneStack {
   transit(next_scene) {
     let scene = this.stack.pop(); // 今のシーンをポップ
     let parent_scene = this.top(); // 親シーンを取得
-    scene.stop(); // シーンの転換に必要な処理
+    scene.finish(); // シーンの転換に必要な処理
     scene.removeChildren(); // シーンの上に載ってるスプライトをremove
     parent_scene.removeChild(scene); // 親シーンから今のシーンをremove
     this.stack.push(next_scene); // 次のシーンをスタック
@@ -48,7 +48,7 @@ module.exports = class SceneStack {
   unfreeze() {
     let scene = this.stack.pop();
     let next_scene = this.top();
-    scene.stop();
+    scene.finish();
     next_scene.removeChild(scene);
     scene.removeChildren();
     next_scene.play();

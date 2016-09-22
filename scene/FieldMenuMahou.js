@@ -79,7 +79,7 @@ module.exports = class FieldMenuMahou extends Scene {
     this.activate();
     this.sound.bgm.lake_in_the_morning_mist.play();
   }
-  stop() {
+  finish() {
     this.unbindAllKeys();
     this.inactivate();
     this.sound.bgm.lake_in_the_morning_mist.pause();

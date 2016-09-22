@@ -116,7 +116,7 @@ module.exports = class FieldMenuSound extends Scene {
     this.activate();
     this.sound.bgm.main.play();
   }
-  stop() {
+  finish() {
     for (let key in this.keyboard) {
       this.keyboard[key].unbind();
     }

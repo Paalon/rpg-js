@@ -154,6 +154,22 @@ module.exports = class Battle extends Scene { // gstateに依存
     }, () => {});
     this.addKeyboard('x', () => {}, () => {});
   }
+  finish() {
+    this.unbindAllKeys();
+    this.inactivate();
+    this.sound.bgm.lake_in_the_morning_mist.stop();
+  }
+  play() {
+    this.bindAllKeys();
+    this.activate();
+    this.sound.bgm.lake_in_the_morning_mist.play();
+  }
+
+  pause() {
+    this.unbindAllKeys();
+    this.inactivate();
+    this.sound.bgm.lake_in_the_morning_mist.pause();
+  }
   update() {
     this.text.playerHP.text = 'HP: ' + this.player.hp + ' / ' + this.player.def_hp;
     this.text.playerMP.text = 'MP: ' + this.player.mp + ' / ' + this.player.def_mp;
@@ -173,21 +189,7 @@ module.exports = class Battle extends Scene { // gstateに依存
       }
     }
   }
-  play() {
-    this.bindAllKeys();
-    this.activate();
-    this.sound.bgm.lake_in_the_morning_mist.play();
-  }
-  stop() {
-    this.unbindAllKeys();
-    this.inactivate();
-    this.sound.bgm.lake_in_the_morning_mist.stop();
-  }
-  pause() {
-    this.unbindAllKeys();
-    this.inactivate();
-    this.sound.bgm.lake_in_the_morning_mist.pause();
-  }
+
   win() {
   }
   lose() {

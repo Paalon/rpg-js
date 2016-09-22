@@ -27,14 +27,20 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.sound = undefined;
     this.status = undefined;
     this.keyboard = {}; // キーボード
-    this.window = new WindowStack(this); // Windowスタック
+    this.window_stack = new WindowStack(this); // Windowスタック
     this.lifetimed = [];
     this.animated = [];
   }
   init() { // 初期化処理
   }
+  finish() {
+  }
+  play() {
+  }
+  pause() {
+  }
   update() { // 更新処理
-    this.window.update();
+    this.window_stack.update();
   }
   updateLocal() {
   }
@@ -53,15 +59,6 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   }
   addLifeTimed(lifetimed) {
     this.lifetimed.push(lifetimed);
-  }
-  stop() { // 終了処理（bgm）
-
-  }
-  play() { // 再生処理（bgm）
-
-  }
-  pause() { // 停止処理（bgm）
-
   }
   addInteractor(interactor) { // インタラクタに追加する。
     this.interactor.push(interactor);
@@ -109,7 +106,19 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
       this.keyboard[key].unbind();
     }
   }
-  addWindow(contents) { // ウィンドウを追加する。
-    let window;
+  addWindow(window) { // ウィンドウを追加する。
+    if (window == undefined) throw new Error('ウィンドウが引数に入ってないよ。');
+    this.addChild(window);
+    this.window_stack.freeze(window);
+  }
+  removeWindow() {
+    this.removeChild(this.window_stack.top());
+    this.window_stack.unfreeze();
+  }
+  removeWindows() {
+    while (this.window_stack.length > 1)  {
+      this.removeChild(this.window_stack.top());
+      this.window_stack.unfreeze();
+    }
   }
 };

@@ -119,7 +119,7 @@ module.exports = class FieldMenu extends Scene { // gstateに依存
     this.activate();
     this.sound.bgm.main.play();
   }
-  stop() {
+  finish() {
     this.unbindAllKeys();
     this.inactivate();
     this.sound.bgm.main.pause();
