@@ -8,11 +8,11 @@ module.exports = class WindowsStack {
   constructor(root_scene) {
     this._stack = [root_scene];
   }
-  update() {
+  update() { // ウィンドウ描写
     for (let win of this._stack) {
-      win.updateGlobal();
+      win.updateGlobal(); // グローバルは全部描写
     }
-    this.top().updateLocal();
+    this.top().updateLocal(); // ローカルはトップだけ描写
   }
   freeze(next_window) {
     this.top().pause();
