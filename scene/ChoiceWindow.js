@@ -18,18 +18,20 @@ module.exports = class ChoiceWindow extends Window {
     let num = 0;
     let len = this.choices.length;
     for (let choice of this.choices) {
-      choice.style = this._unselected_style;
+      choice.style = this.style.unselected_style;
       this.addChild(choice);
       choice.anchor.set(0, 0.5);
       choice.position.set(this.style.x + 12, this.style.y + 4 + (this.style.height - 8) * (2 * num + 1) / (2 * len));
       num++;
     }
     // style解析
-    this.style =  style;
+    this.style = style;
     // 矢印生成・配置
-    this.arrow = new PIXI.Text('>', this.unselected_style);
+    this.arrow = new PIXI.Text('>', this.style.unselected_style);
+    this.arrow.anchor.set(0, 0.5);
     this.arrow.position = this.selected.position;
     this.arrow.position.x -= 8;
+    this.addChild(this.arrow);
 
     // Keyboard
     this.addKeyboard('down', () => {
@@ -66,10 +68,14 @@ module.exports = class ChoiceWindow extends Window {
   next() {
     this._selected_number = (this._selected_number + 1) % this.choices.length;
     this.selected = this.choices[this._selected_number];
+    this.arrow.position = this.selected.position;
+    this.arrow.position.x -= 8;
   }
   back() {
     this._selected_number = (this._selected_number + this.choices.length - 1) % this.choices.length;
     this.selected = this.choices[this._selected_number];
+    this.arrow.position = this.selected.position;
+    this.arrow.position.x -= 8;
   }
   done() {
     this.selected.done();
