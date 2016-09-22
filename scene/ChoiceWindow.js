@@ -9,7 +9,7 @@ let PIXI = require('pixi.js/bin/pixi.js');
 let Window = require('./Window.js');
 
 module.exports = class ChoiceWindow extends Window {
-  constructor(choices, style) {
+  constructor(choices, style, sound) {
     super(style);
     this.choices = choices;
     this._selected_number = 0; // 選んでいるchoiceの番号
@@ -26,6 +26,8 @@ module.exports = class ChoiceWindow extends Window {
     }
     // style解析
     this.style = style;
+    // sound
+    this.sound = sound;
     // 矢印生成・配置
     this.arrow = new PIXI.Text('>', this.style.unselected_style);
     this.arrow.anchor.set(0, 0.5);
@@ -66,18 +68,21 @@ module.exports = class ChoiceWindow extends Window {
   updateLocal() {
   }
   next() {
+    this.sound.fx.gun_fire.play();
     this._selected_number = (this._selected_number + 1) % this.choices.length;
     this.selected = this.choices[this._selected_number];
     this.arrow.position = this.selected.position;
     this.arrow.position.x -= 8;
   }
   back() {
+    this.sound.fx.gun_fire.play();
     this._selected_number = (this._selected_number + this.choices.length - 1) % this.choices.length;
     this.selected = this.choices[this._selected_number];
     this.arrow.position = this.selected.position;
     this.arrow.position.x -= 8;
   }
   done() {
+    this.sound.fx.gun_fire.play();
     this.selected.done();
   }
   cancel() {
