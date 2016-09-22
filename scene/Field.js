@@ -128,7 +128,24 @@ module.exports = class Field extends Scene {
     this.addKeyboard('z', () => {}, () => {});
     this.addKeyboard('x', () => {}, () => {});
   }
-  update() {
+  finish() {
+    this.unbindAllKeys();
+    this.inactivate();
+    this.sound.bgm.main.stop();
+  }
+  play() {
+    this.fadeIn();
+    this.bindAllKeys();
+    this.activate();
+    this.sound.bgm.main.play();
+  }
+
+  pause() {
+    this.unbindAllKeys();
+    this.inactivate();
+    this.sound.bgm.main.pause();
+  }
+  updateLocal() {
     switch (this.isFade) {
       case 'in': {
         this.fade.alpha -= 0.05;
@@ -244,22 +261,8 @@ module.exports = class Field extends Scene {
       }
     }
   }
+  updateGlobal() {
 
-  play() {
-    this.fadeIn();
-    this.bindAllKeys();
-    this.activate();
-    this.sound.bgm.main.play();
-  }
-  stop() {
-    this.unbindAllKeys();
-    this.inactivate();
-    this.sound.bgm.main.stop();
-  }
-  pause() {
-    this.unbindAllKeys();
-    this.inactivate();
-    this.sound.bgm.main.pause();
   }
   fadeIn() {
     this.isFade = 'in';
