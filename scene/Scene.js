@@ -12,24 +12,22 @@ let WindowStack = require('./WindowStack.js');
 let Keyboard = require('../Keyboard.js');
 
 module.exports = class Scene extends PIXI.Container { // gstateに依存
-  constructor(info) {
+  constructor(lib) {
     super(); // PIXI.Container
-    this.change = {
+    this.change = { // シーンの変化を扱う
       isDoing: false, // シーンの変化をするかどうか
-      options: [],
-      info: null // 次のシーンの生成情報
+      options: []
     };
-    this.fade = {};
+    this.lib = lib; // ロードしたものを参照しておく
+    this.sound = lib.sound;
+    this.status = lib.status;
+
     this.interactor = []; // 止めたり再生したりするもの
-    this.next_scene;
-    this.next_info;
-    this.info = info;
-    this.sound = undefined;
-    this.status = undefined;
     this.keyboard = {}; // キーボード
     this.window_stack = new WindowStack(this); // Windowスタック
     this.lifetimed = [];
     this.animated = [];
+    this.fade = {};
   }
   init() { // 初期化処理
     this.bindAllKeys();
@@ -81,24 +79,6 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.change.isDoing = true;
     this.change.options = options;
   }
-  /*
-  transit(next_scene_name, info) { // 遷移処理
-    this.change.isDoing = true;
-    this.change.way = 'transit';
-    this.change.to = next_scene_name;
-    this.change.info = info;
-  }
-  freeze(next_scene_name, info) { // 冷凍処理
-    this.change.isDoing = true;
-    this.change.way = 'freeze';
-    this.change.to = next_scene_name;
-    this.change.info = info;
-  }
-  unfreeze(info) { // 解凍処理
-    this.change.isDoing = true;
-    this.change.way = 'unfreeze';
-    this.change.info = info;
-  }*/
 
   addKeyboard(keyName, pressed, released) {
     // todo: keyboardjsに合わせてkeyNameを解析してfixしたほうがいいかも + Keyboard.jsも
@@ -119,7 +99,7 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.addChild(window);
     this.window_stack.freeze(window);
   }
-  removeWindow() {
+  removeWindow() { // ウィンドウを取り除く
     this.removeChild(this.window_stack.top());
     this.window_stack.unfreeze();
   }
