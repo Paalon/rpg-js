@@ -7,7 +7,7 @@
 'use strict';
 
 let PIXI = require('pixi.js/bin/pixi.js');
-let SceneStack = require('./SceneStack.js');
+let SceneStack = require('./scene/SceneStack.js');
 let Scene = {
   Title: require('./scene/Title.js'),
   Field: require('./scene/Field.js'),
@@ -38,16 +38,9 @@ let renderer = PIXI.autoDetectRenderer(
 document.getElementById("pixiview").appendChild(renderer.view);
 
 // ゲーム内のグローバル変数
-
-// renderのroot
-let stage = new PIXI.Container();
-// ゲームの状態を保持しているオブジェクトたち
-// scene stack
-let sceneStack = new SceneStack(stage);
-
-// library
+// library ゲームのすべてのパラメータを保持する
 let lib = {
-  sound: undefined,
+  sound: loadSound(),
   status: {
     player: {
       lv: 1,
@@ -67,11 +60,35 @@ let lib = {
     }
   }
 };
-lib.sound = loadSound(lib.sound);
+
+// renderのroot
+let stage = new PIXI.Container();
+
+// scene stack
+let sceneStack = new SceneStack(stage, lib);
+
+// ロード
+// 画像データのあるディレクトリを指定
+let dir_paths = ['./img', './map/tile'];
+let img_paths = [];
+for (let path of dir_paths) {
+  let new_paths = FileUtil.loadJSON(path + '/img.json');
+  new_paths = new_paths.map((str) => path + '/' + str);
+  Array.prototype.push.apply(img_paths, new_paths);
+}
+let img_number = img_paths.length;
+
+// ロードが完全に終わり次第実行
+for (let path of img_paths) {
+  PIXI.loader.add(path).load(() => {
+    img_number--;
+    if (img_number == 0) onAssetsLoaded();
+  });
+}
 
 // アセットが読み込まれた時に実行される関数
-function pixiAssetsLoaded() {
-  let first_scene = new Scene.Title(null);
+function onAssetsLoaded() {
+  let first_scene = new Scene.Title(lib);
   first_scene.sound = lib.sound;
   first_scene.status = lib.status;
   sceneStack.init(first_scene);
@@ -89,36 +106,14 @@ function update() {
   let scene = sceneStack.top();
   scene.update();   // 一番上に積まれてるシーンをアップデート
   if (scene.change.isDoing) { // シーン遷移
-    let options = scene.change.options;
-    let info = scene.change.info;
+    let options = scene.change.options; // シーンの変化方法
     for (let option of options) {
       let next_scene = null;
-      if (option.name !== 'unfreeze') {
-        next_scene = new Scene[option.to](info);
-        next_scene.sound = lib.sound;
-        next_scene.status = lib.status;
+      if (option.name !== 'unfreeze') { // freeze or transit
+        next_scene = new Scene[option.to](lib);
       }
       sceneStack[option.name](next_scene);
     }
   }
   renderer.render(stage); // 描画
-}
-
-// ロードして実行
-
-// 画像データのあるディレクトリを指定
-let dir_paths = ['./img', './map/tile'];
-let img_paths = [];
-for (let path of dir_paths) {
-  let new_paths = FileUtil.loadJSON(path + '/img.json');
-  new_paths = new_paths.map((str) => path + '/' + str);
-  Array.prototype.push.apply(img_paths, new_paths);
-}
-let img_number = img_paths.length;
-
-for (let path of img_paths) {
-  PIXI.loader.add(path).load(() => {
-    img_number--;
-    if (img_number == 0) pixiAssetsLoaded();
-  });
 }
