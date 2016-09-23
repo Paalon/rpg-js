@@ -8,8 +8,8 @@
 
 let Howler = require('howler');
 
-module.exports = function loadSound(sound) {
-  sound = {
+module.exports = function loadSound() {
+  let sound = {
     bgm: {},
     fx: {},
     fxNumber: 0,
