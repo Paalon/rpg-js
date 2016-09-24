@@ -87,22 +87,22 @@ for (let path of img_paths) {
 }
 
 // アセットが読み込まれた時に実行される関数
-function onAssetsLoaded() {
+let onAssetsLoaded = () => {
   let first_scene = new Scene.Title(lib);
   first_scene.sound = lib.sound;
   first_scene.status = lib.status;
   sceneStack.init(first_scene);
   animate();
-}
+};
 
 // フレームの更新
-function animate() {
+let animate = () => {
   update();
   requestAnimationFrame(animate);
-}
+};
 
 // 描画関数
-function update() {
+let update = () => {
   let scene = sceneStack.top();
   scene.update();   // 一番上に積まれてるシーンをアップデート
   if (scene.change.isDoing) { // シーン遷移
@@ -116,4 +116,4 @@ function update() {
     }
   }
   renderer.render(stage); // 描画
-}
+};
