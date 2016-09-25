@@ -85,7 +85,6 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.change.isDoing = true;
     this.change.options = options;
     if (options[0].name == 'transit' || options[0].name == 'unfreeze') {
-      console.log('シーン遷移したのでリムーブオールウィンドウズ');
       this.removeAllWindows();
     }
   }
@@ -111,7 +110,6 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   }
   removeWindow() { // ウィンドウを取り除く
     this.removeChild(this.window_stack.top());
-    console.log('remove window');
     this.window_stack.unfreeze();
   }
   removeAllWindows() {
