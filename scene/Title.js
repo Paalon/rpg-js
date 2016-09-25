@@ -11,10 +11,13 @@ let PIXI = require('pixi.js/bin/pixi.js');
 let Scene = require('./Scene.js');
 let sco = require('./SceneChangeOption.js');
 let WindowPoint = require('./WindowPoint.js');
+let WindowStyle = require('./WindowStyle.js');
+let Choice = require('./Choice.js');
+let ChoiceWindow = require('./ChoiceWindow.js');
 
 module.exports = class Title extends Scene {
-  constructor(info) {
-    super(info);
+  constructor(lib) {
+    super(lib);
   }
   init() {
     { // textTitle
@@ -29,29 +32,38 @@ module.exports = class Title extends Scene {
     }
 
     { // buttonStart
-      let buttonStart = this.buttonStart = new PIXI.Text('PRESS ENTER', {fontFamily: 'mplus', fontSize: 12, fill: 0xffffff, align: 'center'});
+      let buttonStart = this.buttonStart = new PIXI.Text('PRESS Z', {fontFamily: 'mplus', fontSize: 12, fill: 0xffffff, align: 'center'});
       buttonStart.anchor.set(0.5, 0.5);
       buttonStart.position = new WindowPoint(0.5, 0.6);
-      buttonStart.on('click', () => { // fieldMapシーンへ遷移
-        this.changeScene([new sco('transit', 'Field')]);
-      });
       this.addInteractor(buttonStart);
       this.addChild(buttonStart);
     }
-    //this.addWindow();
 
     { // keyboard
-      this.addKeyboard('enter', () => {
-        this.changeScene([new sco('transit', 'Field')]);
+      this.addKeyboard('z', () => {
+        this.sound.fx.gun_fire.play();
+        let cw = new ChoiceWindow(
+          [
+            new Choice('はじめから', {fontSize: 10}, () => {
+              this.removeWindow();
+              this.changeScene([new sco('transit', 'Field')]);
+            }),
+            new Choice('もどる', {fontSize: 10}, () => {
+              this.removeWindow();
+            })
+          ],
+          new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}}),
+          this.lib
+        );
+        this.addWindow(cw);
       }, () => {});
       this.addKeyboard('down', () => {}, () => {});
       this.addKeyboard('up', () => {}, () => {});
       this.addKeyboard('right', () => {}, () => {});
       this.addKeyboard('left', () => {}, () => {});
-      this.addKeyboard('y', () => {
-        //this.addWindow(new );
-      }, () => {});
     }
+    this.bindAllKeys();
+    this.activate();
   }
   finish() {
     this.inactivate();
@@ -79,5 +91,6 @@ module.exports = class Title extends Scene {
       this.textTitle.position.x += 1;
     }
   }
-
+  updateGlobal() {
+  }
 };
