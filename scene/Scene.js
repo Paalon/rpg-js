@@ -4,6 +4,8 @@
 // class Scene
 //
 
+// シーンを終了するときはすべてのウィンドウを閉じなければならない。
+
 'use strict';
 
 let PIXI = require('pixi.js/bin/pixi.js');
@@ -13,6 +15,7 @@ let Keyboard = require('../Keyboard.js');
 
 module.exports = class Scene extends PIXI.Container { // gstateに依存
   constructor(lib) {
+    if (lib == undefined) throw new Error('lib is not defined');
     super(); // PIXI.Container
     this.change = { // シーンの変化を扱う
       isDoing: false, // シーンの変化をするかどうか
@@ -34,14 +37,17 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.activate();
   }
   finish() {
+    this.removeAllWindows();
     this.unbindAllKeys();
     this.inactivate();
   }
   play() {
+    this.window_stack.pause();
     this.bindAllKeys();
     this.activate();
   }
   pause() {
+    this.pauseAllWindows();
     this.unbindAllKeys();
     this.inactivate();
   }
@@ -78,6 +84,10 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   changeScene(options) { // シーン遷移
     this.change.isDoing = true;
     this.change.options = options;
+    if (options[0].name == 'transit' || options[0].name == 'unfreeze') {
+      console.log('シーン遷移したのでリムーブオールウィンドウズ');
+      this.removeAllWindows();
+    }
   }
 
   addKeyboard(keyName, pressed, released) {
@@ -101,12 +111,12 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   }
   removeWindow() { // ウィンドウを取り除く
     this.removeChild(this.window_stack.top());
+    console.log('remove window');
     this.window_stack.unfreeze();
   }
-  removeWindows() {
-    while (this.window_stack.length > 1)  {
-      this.removeChild(this.window_stack.top());
-      this.window_stack.unfreeze();
+  removeAllWindows() {
+    while (this.window_stack.length() > 1)  {
+      this.removeWindow();
     }
   }
 };

@@ -5,8 +5,9 @@
 //
 
 module.exports = class WindowsStack {
-  constructor(root_scene) {
+  constructor(root_scene, lib) {
     this._stack = [root_scene];
+    this.lib = lib;
   }
   update() { // ウィンドウ描写
     for (let win of this._stack) {
@@ -14,12 +15,12 @@ module.exports = class WindowsStack {
     }
     this.top().updateLocal(); // ローカルはトップだけ描写
   }
-  freeze(next_window) {
+  freeze(next_window) { // 一番上にウィンドウを追加する
     this.top().pause();
     this._stack.push(next_window);
     this.top().init();
   }
-  unfreeze() {
+  unfreeze() { // 一番上のウィンドウを解凍する
     if (this._stack.length == 0) {
       throw new Error("解凍するウィンドウがないよ。");
     } else {
@@ -28,7 +29,7 @@ module.exports = class WindowsStack {
       this.top().play();
     }
   }
-  transit(next_window) {
+  transit(next_window) { // ウィンドウを遷移する
     if (this._stack.length == 0) {
       throw new Error('解凍するウィンドウがないよ。');
     } else {
@@ -38,7 +39,17 @@ module.exports = class WindowsStack {
       this.top().init();
     }
   }
-  top() {
+  top() { // トップのウィンドウを返す
     return this._stack[this._stack.length - 1];
+  }
+  finish() { // スタックに入っているすべてのwindowを取り除く
+    for (let i = 0; i < this._stack.length - 1; i++) {
+      this.unfreeze();
+    }
+  }
+  pause() { // スタックに入っているすべてのwindowのkeyboardをunbindする 未実装
+  }
+  length() {
+    return this._stack.length;
   }
 };
