@@ -157,6 +157,7 @@ module.exports = class Field extends Scene {
             new Choice('サウンド設定', unselected_style, () => {
             }),
             new Choice('敵と戦う（デバッグ用）', unselected_style, () => {
+              this.removeWindow();
               this.changeScene([new sco('freeze', 'Battle')]);
             }),
             new Choice('回復する（デバッグ用）', unselected_style, () => {
