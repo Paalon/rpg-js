@@ -27,7 +27,7 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
 
     this.interactor = []; // 止めたり再生したりするもの
     this.keyboard = {}; // キーボード
-    this.window_stack = new WindowStack(this); // Windowスタック
+    this.window_stack = new WindowStack(this, lib); // Windowスタック
     this.lifetimed = [];
     this.animated = [];
     this.fade = {};
@@ -114,6 +114,7 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   }
   removeAllWindows() {
     while (this.window_stack.length() > 1)  {
+      console.log('window stack', this.window_stack);
       this.removeWindow();
     }
   }

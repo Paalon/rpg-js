@@ -7,8 +7,8 @@
 let PIXI = require('pixi.js/bin/pixi.js');
 
 let Scene = require('./Scene.js');
-let Choice = require('../Choice.js');
-let ChoiceWindow = require('../ChoiceWindow.js');
+let Choice = require('./Choice.js');
+let ChoiceWindow = require('./ChoiceWindow.js');
 let sco = require('./SceneChangeOption.js');
 let WINDOW = require('../WindowSetting.js');
 

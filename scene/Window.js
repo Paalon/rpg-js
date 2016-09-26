@@ -10,7 +10,9 @@ let WindowStyle = require('./WindowStyle.js');
 let Keyboard = require('../Keyboard.js');
 
 module.exports = class Window extends PIXI.Graphics {
-  constructor(styleObj) {
+  constructor(styleObj, lib) {
+    console.log('window', styleObj);
+    if (lib == undefined) throw new Error('Windowのlibが定義されてないぜ。');
     let style = new WindowStyle(styleObj); // styleObj解析
     super();
     this.beginFill(style.main_color, style.main_alpha);
@@ -19,14 +21,19 @@ module.exports = class Window extends PIXI.Graphics {
     this.keyboard = {}; // キーボード操作
     this.contents = {}; // 並べる要素を指定するオブジェクト
     this.style = style;
+    this.lib = lib;
   }
   init() {
+    this.bindAllKeys();
   }
   finish() {
+    this.unbindAllKeys();
   }
   play() {
+    this.bindAllKeys();
   }
   pause() {
+    this.unbindAllKeys();
   }
   updateGlobal() {
   }
@@ -37,11 +44,13 @@ module.exports = class Window extends PIXI.Graphics {
     this.keyboard[keyName] = new Keyboard(keyName, pressed, released);
   }
   bindAllKeys() { // すべてのキーボードをバインドする。
+    console.log('bind window keys', this);
     for (let key in this.keyboard) {
       this.keyboard[key].bind();
     }
   }
   unbindAllKeys() { // すべてのキーボードをアンバインドする。
+    console.log('unbind window keys', this);
     for (let key in this.keyboard) {
       this.keyboard[key].unbind();
     }

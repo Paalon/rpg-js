@@ -45,7 +45,7 @@ module.exports = class Title extends Scene {
         let cw = new ChoiceWindow(
           [
             new Choice('はじめから', {fontSize: 10}, () => {
-              this.removeWindow();
+              //this.removeWindow();
               this.changeScene([new sco('transit', 'Field')]);
             }),
             new Choice('もどる', {fontSize: 10}, () => {

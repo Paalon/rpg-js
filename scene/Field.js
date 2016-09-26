@@ -13,11 +13,14 @@ let Scene = require('./Scene.js');
 let DirectionalTextures = require('./DirectionalTextures.js');
 let FileUtil = require('../FileUtil.js');
 let Human = require('./Human.js');
-let SCO = require('./SceneChangeOption.js');
+let sco = require('./SceneChangeOption.js');
+let Choice = require('./Choice.js');
+let ChoiceWindow = require('./ChoiceWindow.js');
+let WindowStyle = require('./WindowStyle.js');
 
 module.exports = class Field extends Scene {
-  constructor(info) {
-    super(info);
+  constructor(lib) {
+    super(lib);
     this.isFade = 'in';
     this.texture = {}; // テクスチャ保管
     this.PLAYER_WALKING_SPEED = 1;
@@ -99,7 +102,7 @@ module.exports = class Field extends Scene {
     this.debug.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0);
     this.addInteractor(this.debug.battle);
     this.debug.battle.on('click', () => {
-      this.changeScene([new SCO('freeze', 'Battle')]);
+      this.changeScene([new sco('freeze', 'Battle')]);
       //this.freeze('Battle', null);
     });
 
@@ -111,22 +114,73 @@ module.exports = class Field extends Scene {
     this.fade.alpha = 1;
     this.addChild(this.fade);
 
-    // keyboard
-    this.addKeyboard('down', () => {}, () => {});
-    this.addKeyboard('up', () => {}, () => {});
-    this.addKeyboard('right', () => {}, () => {});
-    this.addKeyboard('left', () => {}, () => {});
-    this.addKeyboard('esc', () => {
-      this.changeScene([new SCO('freeze', 'FieldMenu')]);
-      this.sound.fx.gun_hit.play();
-    }, () => {});
-    this.addKeyboard('e', () => {
-      this.changeScene([new SCO('freeze', 'FieldMenu')]);
-      this.sound.fx.gun_hit.play();
-    }, () => {});
-    this.addKeyboard('enter', () => {}, () => {});
-    this.addKeyboard('z', () => {}, () => {});
-    this.addKeyboard('x', () => {}, () => {});
+    /* keyboard */ {
+      this.addKeyboard('down', () => {}, () => {});
+      this.addKeyboard('up', () => {}, () => {});
+      this.addKeyboard('right', () => {}, () => {});
+      this.addKeyboard('left', () => {}, () => {});
+      this.addKeyboard('esc', () => {
+        this.sound.fx.gun_hit.play();
+        let unselected_style = {fontSize: 10};
+        let sentakushi = new ChoiceWindow(
+          [
+            new Choice('魔法', unselected_style, () => {
+              let shifo = new Choice('シフォ', unselected_style, () => {
+                this.sound.fx.collision.play();
+                this.lib.status.player.hp += 200;
+                if (this.lib.status.player.hp > this.lib.status.player.def_hp) this.lib.status.player.hp = this.lib.status.player.def_hp;
+                this.removeWindow();
+                this.removeWindow();
+              });
+              let olov = new Choice('オロフ', unselected_style, () => {
+                this.removeWindow();
+                this.removeWindow();
+              });
+              let modoru = new Choice('戻る', unselected_style, () => {
+                this.removeWindow();
+              });
+              let mahou = new ChoiceWindow(
+                [shifo, olov, modoru],
+                new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}}),
+                this.lib
+              );
+              this.addWindow(mahou);
+            }),
+            new Choice('閉じる', unselected_style, () => {
+              this.removeWindow();
+              this.sound.fx.gun_fire.play();
+            }),
+            new Choice('ゲームを終了', unselected_style, () => {
+              this.changeScene([new sco('transit', 'Title')]);
+              this.sound.fx.gun_fire.play();
+            }),
+            new Choice('サウンド設定', unselected_style, () => {
+            }),
+            new Choice('敵と戦う（デバッグ用）', unselected_style, () => {
+              this.changeScene([new sco('freeze', 'Battle')]);
+            }),
+            new Choice('回復する（デバッグ用）', unselected_style, () => {
+              this.lib.status.player.hp = this.lib.status.player.def_hp;
+              this.lib.status.player.mp = this.lib.status.player.def_mp;
+            })
+          ],
+          new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}}),
+          this.lib
+        );
+        this.addWindow(sentakushi);
+
+        //this.changeScene([new sco('freeze', 'FieldMenu')]);
+        //this.sound.fx.gun_hit.play();
+      }, () => {});
+      this.addKeyboard('e', () => {
+        this.changeScene([new sco('freeze', 'FieldMenu')]);
+        this.sound.fx.gun_hit.play();
+      }, () => {});
+      this.addKeyboard('enter', () => {}, () => {});
+      this.addKeyboard('z', () => {}, () => {});
+      this.addKeyboard('x', () => {}, () => {});
+    }
+
   }
   finish() {
     this.unbindAllKeys();
@@ -160,7 +214,7 @@ module.exports = class Field extends Scene {
         if (this.fade.alpha >= 1) {
           this.fade.alpha = 1;
           this.isFade = 'no';
-          this.changeScene([new SCO('freeze', this.next_scene)]);
+          this.changeScene([new sco('freeze', this.next_scene)]);
           //this.freeze(this.next_scene, this.next_info);
         }
         break;

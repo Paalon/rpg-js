@@ -1,0 +1,43 @@
+stage // 描写のルート
+lib // すでに非同期ロードしたもの
+
+Scene Field
+Scene Title
+Scene Battle
+Scene GameOver
+
+Window FieldMenu
+Window TittleMenu
+Window BattleMenu
+
+同一シーン内ではロードしたlib、スプライトはアクセスし放題にする？
+
+Sceneが必要なグローバルな情報はlibに集約
+lib.sound
+lib.texture
+playerのステータス
+playerの位置情報
+ゲームのイベントフラグ情報
+
+Windowが必要なグローバルな情報はlibに集約
+
+SceneはSceneStackで操作・管理する
+WindowはWindowStackで操作・管理する
+
+Scene Title = new Scene(lib);
+Scene Field = new Scene(lib);
+
+Window menu = new Window(lib);
+
+コンストラクタの引数が足りなかったら、意図的でない限りエラー吐くようにする。
+
+Window <-h WindowStack <-h Scene <-h SceneStack <-h main
+(Title, Battle, Field) e-> Scene
+(Title, Battle, Field) <-h lib
+YesNoWindow e-> ChoiceWindow e-> Window
+ChoiceWindow h-> Choice
+
+
+
+
+

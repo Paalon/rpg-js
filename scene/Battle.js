@@ -11,10 +11,11 @@ let PIXI = require('pixi.js/bin/pixi.js');
 let WINDOW = require('../WindowSetting.js');
 let Scene = require('./Scene.js');
 let Fighter = require('./Fighter.js');
-let Choice = require('../Choice.js');
-let ChoiceWindow = require('../ChoiceWindow.js');
+let Choice = require('./Choice.js');
+let ChoiceWindow = require('./ChoiceWindow.js');
 let sco = require('./SceneChangeOption.js');
 let FileUtil = require('../FileUtil.js');
+let WindowStyle = require('./WindowStyle.js');
 
 module.exports = class Battle extends Scene { // gstateに依存
   constructor(info) {
@@ -77,11 +78,11 @@ module.exports = class Battle extends Scene { // gstateに依存
     this.text.addChild(this.text.enemyHP);
     this.text.addChild(this.text.enemyMP);
 
-    let selected_style = new PIXI.TextStyle({fontSize: 10, fill: 0x990099});
+    //let selected_style = new PIXI.TextStyle({fontSize: 10, fill: 0x990099});
     let unselected_style = new PIXI.TextStyle({fontSize: 10, fill: 0xffffff});
 
     let tatakau = new Choice(
-      '戦う', selected_style, unselected_style,
+      '戦う', unselected_style,
       () => {
         this.sound.fx.gun_hit.play();
         let dmg_enemy = this.player.attack(this.enemy);
@@ -89,6 +90,8 @@ module.exports = class Battle extends Scene { // gstateに依存
         this.status.player.hp = this.player.hp;
         this.status.player.mp = this.player.mp;
         this.text.console.text = '敵に' + dmg_enemy + 'のダメージ\n自分に' + dmg_player + 'のダメージ';
+
+        // 終了判定
         if (this.player.hp <= 0) {
           this.changeScene([new sco('unfreeze', null), new sco('transit', 'GameOver')]);
         }
@@ -98,9 +101,10 @@ module.exports = class Battle extends Scene { // gstateに依存
       }
     );
     let mahou = new Choice(
-      '魔法', selected_style, unselected_style,
+      '魔法', unselected_style,
       () => {
-        this.changeScene([new sco('freeze', 'BattleMahou')]);
+        console.log('未実装');
+        //this.changeScene([new sco('freeze', 'BattleMahou')]);
         /*
         this.sound.fx.gun_fire.play();
         let dmg_enemy = this.player.mahou(this.enemy);
@@ -116,43 +120,36 @@ module.exports = class Battle extends Scene { // gstateに依存
       }
     );
     let nigeru = new Choice(
-      '逃げる', selected_style, unselected_style,
+      '逃げる', unselected_style,
       () => {
         this.changeScene([new sco('unfreeze', null)]);
       }
     );
     // 選択肢
-    this.sentakushi = new ChoiceWindow(
+    let sentakushi = new ChoiceWindow(
       [tatakau, mahou, nigeru],
-      selected_style,
-      unselected_style,
-      {
-        x: WINDOW.WIDTH * 0.7,
-        y: WINDOW.HEIGHT * 0.6,
-        width: WINDOW.WIDTH * 0.29,
-        height: WINDOW.HEIGHT * 0.39
-      }
+      new WindowStyle({
+        x: WINDOW.WIDTH * 0.6,
+        y: WINDOW.HEIGHT * 0.4,
+        width: WINDOW.WIDTH * 0.3,
+        height: WINDOW.HEIGHT * 0.3,
+        unselected_style: {fontSize: 10, fill: 0xffffff}
+      }),
+      this.lib
     );
-    this.addChild(this.sentakushi);
 
-    // keyboard
-    this.addKeyboard('down', () => {
-      this.sentakushi.next();
-      this.sound.fx.gun_fire.play();
-    }, () => {});
-    this.addKeyboard('up', () => {
-      this.sentakushi.back();
-      this.sound.fx.gun_fire.play();
-    }, () => {});
-    this.addKeyboard('right', () => {}, () => {});
-    this.addKeyboard('left', () => {}, () => {});
-    this.addKeyboard('enter', () => {
-      this.sentakushi.selected.done();
-    }, () => {});
-    this.addKeyboard('z', () => {
-      this.sentakushi.selected.done();
-    }, () => {});
-    this.addKeyboard('x', () => {}, () => {});
+    this.addWindow(sentakushi);
+    console.log(this.window_stack);
+
+    /* keyboard */ /*{
+      this.addKeyboard('down', () => {}, () => {});
+      this.addKeyboard('up', () => {}, () => {});
+      this.addKeyboard('right', () => {}, () => {});
+      this.addKeyboard('left', () => {}, () => {});
+      this.addKeyboard('enter', () => {}, () => {});
+      this.addKeyboard('z', () => {}, () => {});
+      this.addKeyboard('x', () => {}, () => {});
+    }*/
   }
   finish() {
     this.unbindAllKeys();

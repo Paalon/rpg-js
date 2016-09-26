@@ -11,8 +11,8 @@ let PIXI = require('pixi.js/bin/pixi.js');
 let WINDOW = require('../WindowSetting.js');
 let Scene = require('./Scene.js');
 let Fighter = require('./Fighter.js');
-let Choice = require('../Choice.js');
-let ChoiceWindow = require('../ChoiceWindow.js');
+let Choice = require('./Choice.js');
+let ChoiceWindow = require('./ChoiceWindow.js');
 let sco = require('./SceneChangeOption.js');
 let FileUtil = require('../FileUtil.js');
 
