@@ -2,7 +2,9 @@
   "cloud.json",
   "dirt.json",
   "grass.json",
+  "mountain.json",
   "sea.json",
   "stone.json",
-  "void.json"
+  "void.json",
+  "wood.json"
 ]

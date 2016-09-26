@@ -7,7 +7,9 @@
     "2": "stone",
     "3": "grass",
     "4": "dirt",
-    "5": "cloud"
+    "5": "cloud",
+    "6": "wood",
+    "7": "mountain"
   },
   "tileSize": 16,
   "tile": {
