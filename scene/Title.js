@@ -13,6 +13,8 @@ let sco = require('./SceneChangeOption.js');
 let WindowPoint = require('./WindowPoint.js');
 let WindowStyle = require('./WindowStyle.js');
 let Choice = require('./Choice.js');
+let Window = require('./Window.js');
+
 let ChoiceWindow = require('./ChoiceWindow.js');
 
 module.exports = class Title extends Scene {

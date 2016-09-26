@@ -5,8 +5,8 @@
 //
 
 module.exports = class WindowsStack {
-  constructor(root_scene, lib) {
-    this._stack = [root_scene];
+  constructor(lib) {
+    this._stack = [];
     this.lib = lib;
   }
   update() { // ウィンドウ描写

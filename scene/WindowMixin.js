@@ -1,22 +1,18 @@
-// Window.js
+// WindowMixin.js
 // Copyright 2016 Paalon
 //
-// class Window
+// Mixin Window
 //
 
-let PIXI = require('pixi.js/bin/pixi.js');
+//let Keyboard = require('../Keyboard.js');
 
-let WindowStyle = require('./WindowStyle.js');
-let Keyboard = require('./Keyboard.js');
-
-module.exports = class Window extends PIXI.Container {
-  constructor(lib) {
-    if (lib == undefined) throw new Error('Windowのlibが定義されてないぜ。');
-    super(); // super PIXI.Container
+let Window = Base => class extends Base {
+  construct(lib) {
+    //super();
+    this._state = 'load';
+    this.keyboard = {};
+    this.interactor = [];
     this.lib = lib;
-    this.keyboard = {}; // キーボード操作
-    this.interactor = []; // 止めたり再生したりするもの
-    this._state = 'load'; // ウィンドウの状態を保持する
   }
   init() {
     this.bindAllKeys();
@@ -30,14 +26,11 @@ module.exports = class Window extends PIXI.Container {
   pause() {
     this.unbindAllKeys();
   }
-  updateGlobal() {
-  }
-  updateLocal() {
-  }
+  /*
   addKeyboard(keyName, pressed, released) {
     // todo: keyboardjsに合わせてkeyNameを解析してfixしたほうがいいかも + Keyboard.jsも
     this.keyboard[keyName] = new Keyboard(keyName, pressed, released);
-  }
+  }*/
   bindAllKeys() { // すべてのキーボードをバインドする。
     for (let key in this.keyboard) {
       this.keyboard[key].bind();
@@ -53,6 +46,9 @@ module.exports = class Window extends PIXI.Container {
   }
   inactivate() { // inactivate interactors
     this.interactor.map((interactor) => {interactor.interactive = false;} );
+  }
+  addInteractor(interactor) {
+    this.interactor.push(interactor);
   }
   setState(state) {
     let hit = false;
@@ -76,3 +72,5 @@ let STATE = { // enum State
   message: 'message',
   select: 'select'
 };
+
+module.exports = Window;

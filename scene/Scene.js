@@ -10,6 +10,7 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
+let BaseWindow = require('./BaseWindow.js');
 let WindowStack = require('./WindowStack.js');
 let Keyboard = require('../Keyboard.js');
 
@@ -17,39 +18,53 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   constructor(lib) {
     if (lib == undefined) throw new Error('lib is not defined');
     super(); // PIXI.Container
+    this.lib = lib; // ロードしたものを参照しておく
+    this.sound = lib.sound;
+
+    this.keyboard = {}; // キーボード
+    this.interactor = []; // 止めたり再生したりするもの
+
+    this.root_window = new Window(lib);
+    this.window_stack = new WindowStack(lib);
+    this.addWindow(this.root_window);
+
     this.change = { // シーンの変化を扱う
       isDoing: false, // シーンの変化をするかどうか
       options: []
     };
-    this.lib = lib; // ロードしたものを参照しておく
-    this.sound = lib.sound;
-    this.status = lib.status;
-
-    this.interactor = []; // 止めたり再生したりするもの
-    this.keyboard = {}; // キーボード
-    this.window_stack = new WindowStack(this, lib); // Windowスタック
-    this.lifetimed = [];
-    this.animated = [];
-    this.fade = {};
+    this.state = 'load';
+    this.STATE = {
+      load: 'load',
+      fadeIn: 'fadeIn',
+      fadeOut: 'fadeOut',
+      message: 'message'
+    };
+  }
+  changeScene(options) { // シーン遷移
+    this.change.isDoing = true;
+    this.change.options = options;
+    if (options[0].name == 'transit' || options[0].name == 'unfreeze') {
+      this.removeAllWindows();
+    }
   }
   init() { // 初期化処理
-    this.bindAllKeys();
-    this.activate();
+    this.root_window.bindAllKeys();
+    this.root_window.activate();
   }
   finish() {
     this.removeAllWindows();
-    this.unbindAllKeys();
-    this.inactivate();
+    this.root_window.unbindAllKeys();
+    this.base_window.inactivate();
   }
   play() {
     this.window_stack.pause();
-    this.bindAllKeys();
-    this.activate();
+    this.base_window.bindAllKeys();
+    this.base_window.activate();
   }
   pause() {
     this.pauseAllWindows();
-    this.unbindAllKeys();
-    this.inactivate();
+    this.base_window.unbindAllKeys();
+    this.base_window.inactivate();
   }
   update() { // 更新処理
     this.window_stack.update();
@@ -73,34 +88,28 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.lifetimed.push(lifetimed);
   }
   addInteractor(interactor) { // インタラクタに追加する。
-    this.interactor.push(interactor);
+    this.base_window.interactor.push(interactor);
   }
   activate() { // activate interactors
-    this.interactor.map((interactor) => {interactor.interactive = true;} );
+    this.base_window.interactor.map((interactor) => {interactor.interactive = true;} );
   }
   inactivate() { // inactivate interactors
-    this.interactor.map((interactor) => {interactor.interactive = false;} );
+    this.base_window.interactor.map((interactor) => {interactor.interactive = false;} );
   }
-  changeScene(options) { // シーン遷移
-    this.change.isDoing = true;
-    this.change.options = options;
-    if (options[0].name == 'transit' || options[0].name == 'unfreeze') {
-      this.removeAllWindows();
-    }
-  }
+
 
   addKeyboard(keyName, pressed, released) {
     // todo: keyboardjsに合わせてkeyNameを解析してfixしたほうがいいかも + Keyboard.jsも
-    this.keyboard[keyName] = new Keyboard(keyName, pressed, released);
+    this.base_window.keyboard[keyName] = new Keyboard(keyName, pressed, released);
   }
   bindAllKeys() { // すべてのキーボードをバインドする。
-    for (let key in this.keyboard) {
-      this.keyboard[key].bind();
+    for (let key in this.base_window.keyboard) {
+      this.base_window.keyboard[key].bind();
     }
   }
   unbindAllKeys() { // すべてのキーボードをアンバインドする。
-    for (let key in this.keyboard) {
-      this.keyboard[key].unbind();
+    for (let key in this.base_window.keyboard) {
+      this.base_window.keyboard[key].unbind();
     }
   }
   addWindow(window) { // ウィンドウを追加する。
@@ -112,9 +121,8 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
     this.removeChild(this.window_stack.top());
     this.window_stack.unfreeze();
   }
-  removeAllWindows() {
+  removeAllWindows() { // すべてのウィンドウを取り除く
     while (this.window_stack.length() > 1)  {
-      console.log('window stack', this.window_stack);
       this.removeWindow();
     }
   }

@@ -1,7 +1,7 @@
-// Window.js
+// PopUpWindow.js
 // Copyright 2016 Paalon
 //
-// class Window
+// class PopUpWindow
 //
 
 let PIXI = require('pixi.js/bin/pixi.js');
@@ -9,14 +9,20 @@ let PIXI = require('pixi.js/bin/pixi.js');
 let WindowStyle = require('./WindowStyle.js');
 let Keyboard = require('./Keyboard.js');
 
-module.exports = class Window extends PIXI.Container {
-  constructor(lib) {
+module.exports = class Window extends PIXI.Graphics {
+  constructor(styleObj, lib) {
     if (lib == undefined) throw new Error('Windowのlibが定義されてないぜ。');
-    super(); // super PIXI.Container
-    this.lib = lib;
+    let style = new WindowStyle(styleObj); // styleObj解析
+    super();
+    this.beginFill(style.main_color, style.main_alpha);
+    this.lineStyle(style.frame_width, style.frame_color, style.frame_alpha);
+    this.drawRect(style.x, style.y, style.width, style.height);
     this.keyboard = {}; // キーボード操作
-    this.interactor = []; // 止めたり再生したりするもの
+    this.contents = {}; // 並べる要素を指定するオブジェクト
     this._state = 'load'; // ウィンドウの状態を保持する
+    this.style = style;
+    this.lib = lib;
+    this.interactor = []; // 止めたり再生したりするもの
   }
   init() {
     this.bindAllKeys();

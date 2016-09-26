@@ -1,0 +1,20 @@
+
+
+html window -> SceneStack -> [Scene]
+
+Scene -> WindowStack -> [Window]
+
+Window -> PIXI.Container
+
+Window has {
+  Keyboard
+  pixi rendering
+  howler output
+  import asset
+  write save data
+}
+
+Scene init() {
+  this.root_window = new Window();
+  this._window_stack = new WindowStack(this.root_window);
+}

@@ -1,22 +1,24 @@
-// Window.js
+// BaseWindow.js
 // Copyright 2016 Paalon
 //
-// class Window
+// class BaseWindow
 //
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-let WindowStyle = require('./WindowStyle.js');
 let Keyboard = require('./Keyboard.js');
 
-module.exports = class Window extends PIXI.Container {
+module.exports = class BaseWindow extends PIXI.Container {
   constructor(lib) {
     if (lib == undefined) throw new Error('Windowのlibが定義されてないぜ。');
-    super(); // super PIXI.Container
-    this.lib = lib;
+    super();
+    // ウィンドウの状態
+    this._state = 'load'; // ウィンドウの状態を保持する
+    // 入力
     this.keyboard = {}; // キーボード操作
     this.interactor = []; // 止めたり再生したりするもの
-    this._state = 'load'; // ウィンドウの状態を保持する
+    // 出力
+    this.lib = lib;
   }
   init() {
     this.bindAllKeys();
@@ -53,6 +55,9 @@ module.exports = class Window extends PIXI.Container {
   }
   inactivate() { // inactivate interactors
     this.interactor.map((interactor) => {interactor.interactive = false;} );
+  }
+  addInteractor(interactor) {
+    this.interactor.push(interactor);
   }
   setState(state) {
     let hit = false;

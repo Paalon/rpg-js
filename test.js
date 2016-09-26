@@ -1,8 +1,8 @@
-let renderedMixin = Base => class extends Base {
-  init() {}
-  updateGlobal() {}
-  updateLocal() {}
-  update() {}
-};
-class Foo {}
-let Bar = class Bar extends renderedMixin(Foo) {}
+class MyClass() {
+  let a = 'aaa';
+  ret() {
+    return a;
+  }
+}
+let mc = new MyClass();
+console.log(mc.ret());
