@@ -20,6 +20,7 @@ module.exports = class Window extends PIXI.Graphics {
     this.drawRect(style.x, style.y, style.width, style.height);
     this.keyboard = {}; // キーボード操作
     this.contents = {}; // 並べる要素を指定するオブジェクト
+    this._state = 'load'; // ウィンドウの状態を保持する
     this.style = style;
     this.lib = lib;
   }
@@ -55,4 +56,25 @@ module.exports = class Window extends PIXI.Graphics {
       this.keyboard[key].unbind();
     }
   }
+  setState(state) {
+    let hit = false;
+    for (let s of STATE) { // enum的な型チェック
+      if (state == s) {
+        this._state = state;
+        hit = true;
+      }
+    }
+    if (hit) throw new Error('指定したstateが変だよ。');
+  }
+  getState() {
+    return this._state;
+  }
+};
+
+let STATE = { // enum State
+  load: 'load',
+  fadeIn: 'fadeIn',
+  fadeOut: 'fadeOut',
+  message: 'message',
+  select: 'select'
 };
