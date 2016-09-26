@@ -3,10 +3,10 @@
 //
 // class Window
 //
+// ただのコンテナのウィンドウを生成する。
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-let WindowStyle = require('./WindowStyle.js');
 let Keyboard = require('./Keyboard.js');
 
 module.exports = class Window extends PIXI.Container {
@@ -20,15 +20,19 @@ module.exports = class Window extends PIXI.Container {
   }
   init() {
     this.bindAllKeys();
+    this.activate();
   }
   finish() {
     this.unbindAllKeys();
+    this.inactivate();
   }
   play() {
     this.bindAllKeys();
+    this.activate();
   }
   pause() {
     this.unbindAllKeys();
+    this.inactivate();
   }
   updateGlobal() {
   }
@@ -47,6 +51,9 @@ module.exports = class Window extends PIXI.Container {
     for (let key in this.keyboard) {
       this.keyboard[key].unbind();
     }
+  }
+  addInteractor(interactor) {
+    this.interactor.push(interactor);
   }
   activate() { // activate interactors
     this.interactor.map((interactor) => {interactor.interactive = true;} );

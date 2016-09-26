@@ -13,11 +13,11 @@ module.exports = class SceneStack {
   }
   // 一番最初のシーンを加える
   init(first_scene) {
+    let root = this.top();
+    this._stack.push(first_scene);
+    root.addChild(first_scene);
     first_scene.init();
     first_scene.play();
-    let root = this.top();
-    root.addChild(first_scene);
-    this._stack.push(first_scene);
   }
   // シーンを終了して次のシーンへ転換する
   transit(next_scene) {
@@ -54,6 +54,7 @@ module.exports = class SceneStack {
     scene.change.isDoing = false;
   }
   top() {
+    if (this._stack.length == 0) throw new Error('スタックに何も入ってないよ。');
     return this._stack[this._stack.length - 1];
   }
 };

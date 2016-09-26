@@ -22,6 +22,9 @@ module.exports = class Title extends Scene {
     super(lib);
   }
   init() {
+    let root = this.root_window;
+    this.addWindow(root);
+
     { // textTitle
       let textTitle = this.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
       textTitle.anchor.set(0.5, 0.5);
@@ -29,70 +32,39 @@ module.exports = class Title extends Scene {
       textTitle.on('click', () => {
         this.sound.fx.collision.play();
       });
-      this.addInteractor(textTitle);
-      this.addChild(textTitle);
+      root.addInteractor(textTitle);
+      root.addChild(textTitle);
     }
 
     { // buttonStart
       let buttonStart = this.buttonStart = new PIXI.Text('PRESS Z', {fontFamily: 'mplus', fontSize: 12, fill: 0xffffff, align: 'center'});
       buttonStart.anchor.set(0.5, 0.5);
       buttonStart.position = new WindowPoint(0.5, 0.6);
-      this.addInteractor(buttonStart);
-      this.addChild(buttonStart);
+      root.addInteractor(buttonStart);
+      root.addChild(buttonStart);
     }
 
     { // keyboard
-      this.addKeyboard('z', () => {
+      root.addKeyboard('z', () => {
         this.sound.fx.gun_fire.play();
         let cw = new ChoiceWindow(
           [
             new Choice('はじめから', {fontSize: 10}, () => {
-              //this.removeWindow();
               this.changeScene([new sco('transit', 'Field')]);
             }),
             new Choice('もどる', {fontSize: 10}, () => {
               this.removeWindow();
             })
           ],
-          new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}}),
+          new WindowStyle(),
           this.lib
         );
-        this.addWindow(cw);
+        root.addWindow(cw);
       }, () => {});
-      this.addKeyboard('down', () => {}, () => {});
-      this.addKeyboard('up', () => {}, () => {});
-      this.addKeyboard('right', () => {}, () => {});
-      this.addKeyboard('left', () => {}, () => {});
+      //this.addKeyboard('down', () => {}, () => {});
+      //this.addKeyboard('up', () => {}, () => {});
+      //this.addKeyboard('right', () => {}, () => {});
+      //this.addKeyboard('left', () => {}, () => {});
     }
-    this.bindAllKeys();
-    this.activate();
-  }
-  finish() {
-    this.inactivate();
-    this.unbindAllKeys();
-  }
-  play() {
-    this.activate();
-    this.bindAllKeys();
-  }
-  pause() {
-    this.inactivate();
-    this.unbindAllKeys();
-  }
-  updateLocal() {
-    if (this.keyboard.down.isDown) {
-      this.textTitle.position.y += 1;
-    }
-    if (this.keyboard.up.isDown) {
-      this.textTitle.position.y -= 1;
-    }
-    if (this.keyboard.left.isDown) {
-      this.textTitle.position.x -= 1;
-    }
-    if (this.keyboard.right.isDown) {
-      this.textTitle.position.x += 1;
-    }
-  }
-  updateGlobal() {
   }
 };

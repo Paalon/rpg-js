@@ -9,6 +9,13 @@ module.exports = class WindowsStack {
     this._stack = [];
     this.lib = lib;
   }
+  init(next_window) {
+    this._stack.push(next_window);
+    this.top().init();
+  }
+  play() {
+    this.top().play();
+  }
   update() { // ウィンドウ描写
     for (let win of this._stack) {
       win.updateGlobal(); // グローバルは全部描写
@@ -16,9 +23,13 @@ module.exports = class WindowsStack {
     this.top().updateLocal(); // ローカルはトップだけ描写
   }
   freeze(next_window) { // 一番上にウィンドウを追加する
-    this.top().pause();
-    this._stack.push(next_window);
-    this.top().init();
+    if (this.length() == 0) {
+      this._stack.push(next_window);
+    } else {
+      this.top().pause();
+      this._stack.push(next_window);
+      this.top().init();
+    }  
   }
   unfreeze() { // 一番上のウィンドウを解凍する
     if (this._stack.length == 0) {
@@ -40,6 +51,7 @@ module.exports = class WindowsStack {
     }
   }
   top() { // トップのウィンドウを返す
+    if (this._stack.length == 0) throw new Error('ウィンドウスタックに何も入ってないよ。');
     return this._stack[this._stack.length - 1];
   }
   finish() { // スタックに入っているすべてのwindowを取り除く

@@ -6,9 +6,9 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-let Window = require('./Window.js');
+let Keyboard = require('./Keyboard.js');
 
-module.exports = class ChoiceWindow extends Window {
+module.exports = class ChoiceWindow extends PIXI.Graphics {
   constructor(choices, style, lib) {
     if (lib == undefined) throw new Error('libがないよ。');
     super(style, lib);
