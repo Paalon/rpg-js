@@ -47,6 +47,16 @@ module.exports = class Scene { // gstateに依存
       this.removeAllWindows();
     }
   }
+  // pixiの引き継ぎ
+  addChild(child) {
+    this.pixi.addChild(child);
+  }
+  removeChild(child) {
+    this.pixi.removeChild(child);
+  }
+  removeChildren() {
+    this.pixi.removeChildren();
+  }
   init() { // 初期化処理
     this.addWindow(this.root_window);
   }
@@ -64,7 +74,7 @@ module.exports = class Scene { // gstateに依存
   }
   addWindow(window) { // ウィンドウを追加する。
     if (window == undefined) throw new Error('ウィンドウが引数に入ってないよ。');
-    this.pixi.addChild(window.pixi);
+    this.addChild(window.pixi);
     this.window_stack.freeze(window);
   }
   removeWindow() { // ウィンドウを取り除く

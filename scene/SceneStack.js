@@ -6,8 +6,6 @@
 
 'use strict';
 
-let Scene = require('./Scene.js');
-
 let Scenes = {
   Title: require('./Title.js'),
   Field: require('./Field.js'),
@@ -22,51 +20,49 @@ let Scenes = {
 module.exports = class SceneStack {
   // PIXIのrenderer's root, lib
   constructor(root, lib) {
-    this._stack = [root]; // シーンスタック
+    this._stack = []; // シーンスタック
+    this.root = root;
     this.lib = lib;
   }
   // 一番最初のシーンを加える
   init() {
-    let root = this.top();
     let first_scene = new Scenes.Title(this.lib);
     this._stack.push(first_scene);
-    root.addChild(first_scene.pixi);
+    this.root.addChild(first_scene.pixi);
     first_scene.init();
     first_scene.play();
   }
   // シーンを終了して次のシーンへ転換する
   transit(next_scene) {
-    let scene = this._stack.pop(); // 今のシーンをポップ
-    let parent_scene = this.top(); // 親シーンを取得
-    scene.finish(); // シーンの転換に必要な処理
-    scene.removeChildren(); // シーンの上に載ってるスプライトをremove
-    parent_scene.removeChild(scene); // 親シーンから今のシーンをremove
+    let present_scene = this._stack.pop(); // 今のシーンをポップ
+    present_scene.finish(); // シーンの転換に必要な処理
+    present_scene.removeChildren(); // シーンの上に載ってるスプライトをremove
+    this.root.removeChild(present_scene); // ルートから今のシーンをremove
     this._stack.push(next_scene); // 次のシーンをスタック
-    parent_scene.addChild(next_scene); // 親シーンに次のシーンをadd
+    this.root.addChild(next_scene); // ルートに次のシーンをadd
     next_scene.init(); // 次のシーンの初期化
     next_scene.play();
-    scene.change.isDoing = false; // 今のシーンの変化終了
+    present_scene.state = 'load'; // 今のシーンの変化終了
   }
   // シーンを冷凍して次のシーンをプッシュする
   freeze(next_scene) {
-    let scene = this.top();
-    scene.pause(); // 停止処理
-    //scene.freeze();
+    let present_scene = this.top();
+    present_scene.pause(); // 停止処理
     this._stack.push(next_scene);
-    scene.addChild(next_scene);
+    this.root.addChild(next_scene);
     next_scene.init();
     next_scene.play();
-    scene.change.isDoing = false;
+    present_scene.state = 'load';
   }
   // シーンを終了して前のシーンを解凍する
   unfreeze() {
-    let scene = this._stack.pop();
+    let present_scene = this._stack.pop();
     let next_scene = this.top();
-    scene.finish();
-    next_scene.removeChild(scene);
-    scene.removeChildren();
+    present_scene.finish();
+    this.root.removeChild(present_scene);
+    present_scene.removeChildren();
     next_scene.play();
-    scene.change.isDoing = false;
+    present_scene.state = 'load';
   }
   top() {
     if (this._stack.length == 0) throw new Error('スタックに何も入ってないよ。');
