@@ -9,20 +9,17 @@ let PIXI = require('pixi.js/bin/pixi.js');
 let WindowStyle = require('./WindowStyle.js');
 let Keyboard = require('./Keyboard.js');
 
-module.exports = class Window extends PIXI.Graphics {
+module.exports = class PopUpWindow extends Window {
   constructor(styleObj, lib) {
     if (lib == undefined) throw new Error('Windowのlibが定義されてないぜ。');
     let style = new WindowStyle(styleObj); // styleObj解析
-    super();
-    this.beginFill(style.main_color, style.main_alpha);
-    this.lineStyle(style.frame_width, style.frame_color, style.frame_alpha);
-    this.drawRect(style.x, style.y, style.width, style.height);
-    this.keyboard = {}; // キーボード操作
+    super(lib);
+    let pixi = this.pixi = new PIXI.Graphics();
+    pixi.beginFill(style.main_color, style.main_alpha);
+    pixi.lineStyle(style.frame_width, style.frame_color, style.frame_alpha);
+    pixi.drawRect(style.x, style.y, style.width, style.height);
     this.contents = {}; // 並べる要素を指定するオブジェクト
-    this._state = 'load'; // ウィンドウの状態を保持する
     this.style = style;
-    this.lib = lib;
-    this.interactor = []; // 止めたり再生したりするもの
   }
   init() {
     this.bindAllKeys();

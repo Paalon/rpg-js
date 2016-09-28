@@ -18,3 +18,7 @@ Scene init() {
   this.root_window = new Window();
   this._window_stack = new WindowStack(this.root_window);
 }
+
+Window -> PIXI.Container
+ChoiceWindow -> Window, PIXI.Graphics
+PIXI.Graphics -> PIXI.Container

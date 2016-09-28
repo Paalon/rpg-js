@@ -9,14 +9,17 @@ let PIXI = require('pixi.js/bin/pixi.js');
 
 let Keyboard = require('./Keyboard.js');
 
-module.exports = class Window extends PIXI.Container {
+module.exports = class Window {
   constructor(lib) {
     if (lib == undefined) throw new Error('Windowのlibが定義されてないぜ。');
-    super(); // super PIXI.Container
+    this.pixi = new PIXI.Container();
     this.lib = lib;
     this.keyboard = {}; // キーボード操作
     this.interactor = []; // 止めたり再生したりするもの
     this._state = 'load'; // ウィンドウの状態を保持する
+  }
+  addChild(child) {
+    this.pixi.addChild(child);
   }
   init() {
     this.bindAllKeys();

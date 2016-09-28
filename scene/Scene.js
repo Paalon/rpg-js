@@ -12,12 +12,11 @@ let PIXI = require('pixi.js/bin/pixi.js');
 
 let Window = require('./Window.js');
 let WindowStack = require('./WindowStack.js');
-let Keyboard = require('./Keyboard.js');
 
-module.exports = class Scene extends PIXI.Container { // gstateに依存
+module.exports = class Scene { // gstateに依存
   constructor(lib) {
-    if (lib == undefined) throw new Error('lib is not defined');
-    super(); // PIXI.Container
+    if (lib == undefined) throw new Error('ライブラリが与えられてないぜ。');
+    this.pixi = new PIXI.Container();
     this.lib = lib; // ロードしたものを参照しておく
     this.sound = lib.sound;
 
@@ -31,17 +30,19 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
       isDoing: false, // シーンの変化をするかどうか
       options: []
     };
-    this.state = 'load';
-    this.STATE = {
+    this.state = 'load'; // シーンの状態を保持
+    this.STATE = { // シーンの状態
       load: 'load',
       fadeIn: 'fadeIn',
       fadeOut: 'fadeOut',
-      message: 'message'
+      message: 'message',
+      change: 'change'
     };
+    this.changeOption = null;
   }
   changeScene(options) { // シーン遷移
-    this.change.isDoing = true;
-    this.change.options = options;
+    this.state = 'change';
+    this.changeOptions = options;
     if (options[0].name == 'transit' || options[0].name == 'unfreeze') {
       this.removeAllWindows();
     }
@@ -63,11 +64,11 @@ module.exports = class Scene extends PIXI.Container { // gstateに依存
   }
   addWindow(window) { // ウィンドウを追加する。
     if (window == undefined) throw new Error('ウィンドウが引数に入ってないよ。');
-    this.addChild(window);
+    this.pixi.addChild(window.pixi);
     this.window_stack.freeze(window);
   }
   removeWindow() { // ウィンドウを取り除く
-    this.removeChild(this.window_stack.top());
+    this.pixi.removeChild(this.window_stack.top().pixi);
     this.window_stack.unfreeze();
   }
   removeAllWindows() { // すべてのウィンドウを取り除く

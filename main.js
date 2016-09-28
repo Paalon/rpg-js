@@ -8,16 +8,6 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 let SceneStack = require('./scene/SceneStack.js');
-let Scene = {
-  Title: require('./scene/Title.js'),
-  Field: require('./scene/Field.js'),
-  FieldMenu: require('./scene/FieldMenu.js'),
-  FieldMenuMahou: require('./scene/FieldMenuMahou'),
-  FieldMenuSound: require('./scene/FieldMenuSound.js'),
-  Battle: require('./scene/Battle.js'),
-  BattleMahou: require('./scene/BattleMahou.js'),
-  GameOver: require('./scene/GameOver.js')
-};
 let WINDOW = require('./WindowSetting.js');
 let FileUtil = require('./FileUtil.js');
 let loadSound = require('./loadSound.js');
@@ -88,10 +78,7 @@ for (let path of img_paths) {
 
 // アセットが読み込まれた時に実行される関数
 let onAssetsLoaded = () => {
-  let first_scene = new Scene.Title(lib);
-  first_scene.sound = lib.sound;
-  first_scene.status = lib.status;
-  sceneStack.init(first_scene);
+  sceneStack.init();
   animate();
 };
 
@@ -103,17 +90,6 @@ let animate = () => {
 
 // 描画関数
 let update = () => {
-  let scene = sceneStack.top();
-  scene.update();   // 一番上に積まれてるシーンをアップデート
-  if (scene.change.isDoing) { // シーン遷移
-    let options = scene.change.options; // シーンの変化方法
-    for (let option of options) {
-      let next_scene = null;
-      if (option.name !== 'unfreeze') { // freeze or transit
-        next_scene = new Scene[option.to](lib);
-      }
-      sceneStack[option.name](next_scene);
-    }
-  }
-  renderer.render(stage); // 描画
+  sceneStack.update();
+  renderer.render(stage);
 };

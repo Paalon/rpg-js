@@ -6,16 +6,31 @@
 
 'use strict';
 
+let Scene = require('./Scene.js');
+
+let Scenes = {
+  Title: require('./Title.js'),
+  Field: require('./Field.js'),
+  FieldMenu: require('./FieldMenu.js'),
+  FieldMenuMahou: require('./FieldMenuMahou'),
+  FieldMenuSound: require('./FieldMenuSound.js'),
+  Battle: require('./Battle.js'),
+  BattleMahou: require('./BattleMahou.js'),
+  GameOver: require('./GameOver.js')
+};
+
 module.exports = class SceneStack {
-  constructor(root, lib) { // PIXIの描写ルートとlib
+  // PIXIのrenderer's root, lib
+  constructor(root, lib) {
     this._stack = [root]; // シーンスタック
     this.lib = lib;
   }
   // 一番最初のシーンを加える
-  init(first_scene) {
+  init() {
     let root = this.top();
+    let first_scene = new Scenes.Title(this.lib);
     this._stack.push(first_scene);
-    root.addChild(first_scene);
+    root.addChild(first_scene.pixi);
     first_scene.init();
     first_scene.play();
   }
@@ -56,5 +71,25 @@ module.exports = class SceneStack {
   top() {
     if (this._stack.length == 0) throw new Error('スタックに何も入ってないよ。');
     return this._stack[this._stack.length - 1];
+  }
+  update() {
+    let top_scene = this.top();
+    // update
+    top_scene.update();
+    // シーン遷移
+    if (top_scene.state == 'change') {
+      top_scene.change();
+    }
+  }
+  change() {
+    let top_scene = this.top();
+    let options = top_scene.changeOptions;
+    for (let option of options) {
+      let next_scene = null;
+      if (option.name !== 'unfreeze') { // freeze or transit
+        next_scene = new Scenes[option.to](this.lib);
+      }
+      this[option.name](next_scene);
+    }
   }
 };
