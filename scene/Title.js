@@ -12,6 +12,7 @@ let Scene = require('./Scene.js');
 let sco = require('./SceneChangeOption.js');
 let WindowPoint = require('./WindowPoint.js');
 let WindowStyle = require('./WindowStyle.js');
+let PopUpWindow = require('./PopUpWindow.js');
 let Choice = require('./Choice.js');
 let Window = require('./Window.js');
 
@@ -26,7 +27,7 @@ module.exports = class Title extends Scene {
     this.addWindow(root);
 
     { // textTitle
-      let textTitle = this.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
+      let textTitle = root.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
       textTitle.anchor.set(0.5, 0.5);
       textTitle.position = new WindowPoint(0.5, 0.4);
       textTitle.on('click', () => {
@@ -37,7 +38,7 @@ module.exports = class Title extends Scene {
     }
 
     { // buttonStart
-      let buttonStart = this.buttonStart = new PIXI.Text('PRESS Z', {fontFamily: 'mplus', fontSize: 12, fill: 0xffffff, align: 'center'});
+      let buttonStart = root.buttonStart = new PIXI.Text('PRESS Z', {fontFamily: 'mplus', fontSize: 12, fill: 0xffffff, align: 'center'});
       buttonStart.anchor.set(0.5, 0.5);
       buttonStart.position = new WindowPoint(0.5, 0.6);
       root.addInteractor(buttonStart);
@@ -47,6 +48,9 @@ module.exports = class Title extends Scene {
     { // keyboard
       root.addKeyboard('z', () => {
         this.sound.fx.gun_fire.play();
+        let pw = new PopUpWindow({}, this.lib);
+        this.addWindow(pw);
+        /*
         let cw = new ChoiceWindow(
           [
             new Choice('はじめから', {fontSize: 10}, () => {
@@ -60,11 +64,27 @@ module.exports = class Title extends Scene {
           this.lib
         );
         root.addWindow(cw);
+        */
       }, () => {});
-      //this.addKeyboard('down', () => {}, () => {});
-      //this.addKeyboard('up', () => {}, () => {});
-      //this.addKeyboard('right', () => {}, () => {});
-      //this.addKeyboard('left', () => {}, () => {});
+      root.addKeyboard('down', () => {}, () => {});
+      root.addKeyboard('up', () => {}, () => {});
+      root.addKeyboard('right', () => {}, () => {});
+      root.addKeyboard('left', () => {}, () => {});
     }
+    root.updateLocal = () => {
+      if (root.keyboard.left.isDown) {
+        root.textTitle.position.x--;
+      }
+      if (root.keyboard.right.isDown) {
+        root.textTitle.position.x++;
+      }
+      if (root.keyboard.up.isDown) {
+        root.textTitle.position.y--;
+      }
+      if (root.keyboard.down.isDown) {
+        root.textTitle.position.y++;
+      }
+    };
   }
+
 };
