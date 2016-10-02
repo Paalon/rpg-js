@@ -74,10 +74,13 @@ module.exports = class Scene { // gstateに依存
   }
   addWindow(window) { // ウィンドウを追加する。
     if (window == undefined) throw new Error('ウィンドウが引数に入ってないよ。');
+    window.parent = this;
+    window.lib = this.lib;
     this.addChild(window.pixi);
     this.window_stack.freeze(window);
   }
   removeWindow() { // ウィンドウを取り除く
+    this.window_stack.top().parent = undefined;
     this.pixi.removeChild(this.window_stack.top().pixi);
     this.window_stack.unfreeze();
   }

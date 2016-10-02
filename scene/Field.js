@@ -14,7 +14,7 @@ let DirectionalTextures = require('./DirectionalTextures.js');
 let FileUtil = require('../FileUtil.js');
 let Human = require('./Human.js');
 let sco = require('./SceneChangeOption.js');
-let Choice = require('./Choice.js');
+let ChoiceText = require('./ChoiceText.js');
 let ChoiceWindow = require('./ChoiceWindow.js');
 let WindowStyle = require('./WindowStyle.js');
 

@@ -6,12 +6,11 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-let PopUpWindow = require('./PopUpWindow.js');
+let StyledWindow = require('./StyledWindow.js');
 
-module.exports = class ChoiceWindow extends PopUpWindow {
-  constructor(choices, style, lib) {
-    if (lib == undefined) throw new Error('libがないよ。');
-    super(style, lib);
+module.exports = class ChoiceWindow extends StyledWindow {
+  constructor(choices, style) {
+    super(style);
     this.choices = choices;
     this._selected_number = 0; // 選んでいるchoiceの番号
     this.selected = choices[this._selected_number];
@@ -19,17 +18,15 @@ module.exports = class ChoiceWindow extends PopUpWindow {
     let num = 0;
     let len = this.choices.length;
     for (let choice of this.choices) {
-      choice.style = this.style.unselected_style;
-      this.addChild(choice);
+      console.log(this.style.unselected_style);
+      //choice.text.dirty = true;
+      choice.text.style = this.style.unselected_style;
+
+      this.addChild(choice.text);
       choice.anchor.set(0, 0.5);
       choice.position.set(this.style.x + 12, this.style.y + 4 + (this.style.height - 8) * (2 * num + 1) / (2 * len));
       num++;
     }
-    // style解析
-    this.style = style;
-    // lib
-    this.lib = lib;
-
     // 矢印生成・配置
     this.arrow = new PIXI.Text('>', this.style.unselected_style);
     this.arrow.anchor.set(0, 0.5);
@@ -50,12 +47,6 @@ module.exports = class ChoiceWindow extends PopUpWindow {
     this.addKeyboard('x', () => {
       this.cancel();
     }, () => {});
-    // キャンセル用
-    this.isCancel = false;
-  }
-  updateGlobal() {
-  }
-  updateLocal() {
   }
   next() {
     this.lib.sound.fx.gun_fire.play();
@@ -72,10 +63,11 @@ module.exports = class ChoiceWindow extends PopUpWindow {
     this.arrow.position.x -= 8;
   }
   done() {
-    this.lib.sound.fx.gun_fire.play();
+    //this.lib.sound.fx.done.play();
     this.selected.done();
   }
   cancel() {
-    this.isCancel = true;
+    this.lib.sound.fx.cancel.play();
+    this.parent.removeWindow();
   }
 };

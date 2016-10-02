@@ -36,8 +36,3 @@ Window <-h WindowStack <-h Scene <-h SceneStack <-h main
 (Title, Battle, Field) <-h lib
 YesNoWindow e-> ChoiceWindow e-> Window
 ChoiceWindow h-> Choice
-
-
-
-
-

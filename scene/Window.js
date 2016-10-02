@@ -10,12 +10,18 @@ let PIXI = require('pixi.js/bin/pixi.js');
 let Keyboard = require('./Keyboard.js');
 
 module.exports = class Window {
-  constructor(lib) {
-    if (lib == undefined) throw new Error('Windowのlibが定義されてないぜ。');
+  constructor() {
+    // PIXI.Container
     this.pixi = new PIXI.Container();
-    this.lib = lib;
+    // Global library
+    this.lib = undefined; // addWindowの際に決定される
+    // parent
+    this.parent = undefined; // addWindowの際に決定される
+    // Keyboard management
     this.keyboard = {}; // キーボード操作
+    // Interactor management
     this.interactor = []; // 止めたり再生したりするもの
+    // Window state
     this._state = 'load'; // ウィンドウの状態を保持する
   }
   addChild(child) {
@@ -60,6 +66,15 @@ module.exports = class Window {
     for (let key in this.keyboard) {
       this.keyboard[key].unbind();
     }
+  }
+  addKeyboardNormal() { // 通常のキーボード設定を加える
+    this.addKeyboard('z', () => {
+      this.parent.sound.fx.done.play();
+    }, () => {});
+    this.addKeyboard('x', () => {
+      this.parent.sound.fx.cancel.play();
+      this.parent.removeWindow();
+    }, () => {});
   }
   addInteractor(interactor) {
     this.interactor.push(interactor);

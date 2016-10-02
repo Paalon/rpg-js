@@ -9,13 +9,12 @@
 let PIXI = require('pixi.js/bin/pixi.js');
 
 let Scene = require('./Scene.js');
-let sco = require('./SceneChangeOption.js');
+//let sco = require('./SceneChangeOption.js');
 let WindowPoint = require('./WindowPoint.js');
 let WindowStyle = require('./WindowStyle.js');
-let PopUpWindow = require('./PopUpWindow.js');
-let Choice = require('./Choice.js');
-let Window = require('./Window.js');
+//let StyledWindow = require('./StyledWindow.js');
 
+let ChoiceText = require('./ChoiceText.js');
 let ChoiceWindow = require('./ChoiceWindow.js');
 
 module.exports = class Title extends Scene {
@@ -47,24 +46,26 @@ module.exports = class Title extends Scene {
 
     { // keyboard
       root.addKeyboard('z', () => {
-        this.sound.fx.gun_fire.play();
-        let pw = new PopUpWindow({}, this.lib);
-        this.addWindow(pw);
+        this.sound.fx.done.play();
         /*
+        let pw = new StyledWindow({});
+        pw.addKeyboardNormal();
+        this.addWindow(pw);*/
+
         let cw = new ChoiceWindow(
           [
-            new Choice('はじめから', {fontSize: 10}, () => {
-              this.changeScene([new sco('transit', 'Field')]);
+            new ChoiceText('はじめから', () => {
+              this.lib.sound.fx.done.play();
+              //this.changeScene([new sco('transit', 'Field')]);
             }),
-            new Choice('もどる', {fontSize: 10}, () => {
-              this.removeWindow();
+            new ChoiceText('もどる', () => {
+              cw.cancel();
             })
           ],
-          new WindowStyle(),
-          this.lib
+          new WindowStyle()
         );
-        root.addWindow(cw);
-        */
+        this.addWindow(cw);
+
       }, () => {});
       root.addKeyboard('down', () => {}, () => {});
       root.addKeyboard('up', () => {}, () => {});

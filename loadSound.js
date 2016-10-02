@@ -48,6 +48,14 @@ module.exports = function loadSound() {
     src: ['./sound/gun_hit.mp3'],
     preload: true
   });
+  sound.fx.done = new Howler.Howl({
+    src: ['./sound/done.mp3'],
+    preload: true
+  });
+  sound.fx.cancel = new Howler.Howl({
+    src: ['./sound/cancel.mp3'],
+    preload: true
+  });
   // fxの共通の設定
   for (let key in sound.fx) {
     sound.fx[key].on('play', () => {sound.fxNumber++;});
