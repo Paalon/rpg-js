@@ -21,6 +21,12 @@ module.exports = class Window {
   addChild(child) {
     this.pixi.addChild(child);
   }
+  removeChild(child) {
+    this.pixi.removeChild(child);
+  }
+  removeChildren() {
+    this.pixi.removeChildren();
+  }
   init() {
     this.bindAllKeys();
     this.activate();
