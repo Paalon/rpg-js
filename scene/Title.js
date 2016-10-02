@@ -55,7 +55,7 @@ module.exports = class Title extends Scene {
         let cw = new ChoiceWindow(
           [
             new ChoiceText('はじめから', () => {
-              this.lib.sound.fx.done.play();
+              this.lib.sound.fx.start.play();
               //this.changeScene([new sco('transit', 'Field')]);
             }),
             new ChoiceText('もどる', () => {
@@ -87,5 +87,4 @@ module.exports = class Title extends Scene {
       }
     };
   }
-
 };

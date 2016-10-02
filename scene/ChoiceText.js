@@ -12,8 +12,8 @@ module.exports = class ChoiceText {
     this.text = new PIXI.Text(text);
     this._done = done;
     this.position = this.text.position;
-    this.style = this.text.style;
     this.anchor = this.text.anchor;
+    this.style = this.text.style;
   }
   done() {
     this._done();

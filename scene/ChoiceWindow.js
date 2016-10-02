@@ -18,10 +18,8 @@ module.exports = class ChoiceWindow extends StyledWindow {
     let num = 0;
     let len = this.choices.length;
     for (let choice of this.choices) {
-      console.log(this.style.unselected_style);
       //choice.text.dirty = true;
       choice.text.style = this.style.unselected_style;
-
       this.addChild(choice.text);
       choice.anchor.set(0, 0.5);
       choice.position.set(this.style.x + 12, this.style.y + 4 + (this.style.height - 8) * (2 * num + 1) / (2 * len));

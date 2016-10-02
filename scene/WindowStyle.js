@@ -19,7 +19,7 @@ module.exports = class WindowStyle {
     else this.width = options.width;
     if (options.height == undefined) this.height = WINDOW.HEIGHT * 0.6;
     else this.height = options.height;
-    if (options.main_color == undefined) this.main_color = 0xcc77aa;
+    if (options.main_color == undefined) this.main_color = 0x5f9ea0;
     else this.main_color = options.main_color;
     if (this.main_alpha == undefined) this.main_alpha = 0.8;
     else this.main_alpha = options.main_alpha;
@@ -30,7 +30,7 @@ module.exports = class WindowStyle {
     if (this.frame_alpha == undefined) this.frame_alpha = 0.8;
     else this.frame_alpha = options.frame_alpha;
     //this.selected_style = new PIXI.TextStyle(options.selected_style);
-    if (this.unselected_style == undefined) this.unselected_style = new PIXI.TextStyle({fontSize: 10});
+    if (this.unselected_style == undefined) this.unselected_style = new PIXI.TextStyle({fontSize: 10, fill: 0xffffff});
     else this.unselected_style = new PIXI.TextStyle(options.unselected_style);
   }
 };
