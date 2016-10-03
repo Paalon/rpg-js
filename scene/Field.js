@@ -21,82 +21,83 @@ let WindowStyle = require('./WindowStyle.js');
 module.exports = class Field extends Scene {
   constructor(lib) {
     super(lib);
-    this.isFade = 'in';
     this.texture = {}; // テクスチャ保管
+    this.map = undefined; // マップデータ
     this.PLAYER_WALKING_SPEED = 1;
   }
   init() {
-    //console.log(this.info);
-    // マップ読み込み
-    let map_file_name = "./map/sample.json";
-    let map = this.map = FileUtil.loadMap(map_file_name);
-    // タイルのテクスチャ生成
-    let texturesMap = {};
-    for (let key in map.tileId) {
-      let spriteFrames = FileUtil.fromSpriteSheet("./map/tile", map.tileId[key]);
-      texturesMap[key] = spriteFrames;
-    }
-    // タイルのスプライト生成 tiles -> containerMap
-    let spritesMap = [];
-    let containerMap = this.containerMap = new PIXI.Container();
-    for (let x = 0; x < map.size.x; x++) {
-      for (let y = 0; y < map.size.y; y++) {
-        spritesMap[x] = [];
+    let root = this.root_window;
+    this.addWindow(root);
+
+    { // マップ読み込み
+      let map_file_name = "./map/sample.json";
+      let map = this.map = FileUtil.loadMap(map_file_name);
+      // タイルのテクスチャ生成
+      let texturesMap = {};
+      for (let key in map.tileId) {
+        let spriteFrames = FileUtil.fromSpriteSheet("./map/tile", map.tileId[key]);
+        texturesMap[key] = spriteFrames;
       }
-    }
-    for (let x = 0; x < map.size.x; x++) {
-      for (let y = 0; y < map.size.y; y++) {
-        for (let key in map.tileId) {
-          if (map.tile.view[x][y] == key) {
-            spritesMap[x][y] = new PIXI.extras.MovieClip(texturesMap[key]);
-            spritesMap[x][y].position.set(x * WINDOW.TILE_SIZE, y * WINDOW.TILE_SIZE);
-            spritesMap[x][y].animationSpeed = 0.2;
-            spritesMap[x][y].play();
-            containerMap.addChild(spritesMap[x][y]);
+      // タイルのスプライト生成 tiles -> containerMap
+      let spritesMap = [];
+      let mapContainer = this.mapContainer = new PIXI.Container();
+      for (let x = 0; x < map.size.x; x++) {
+        for (let y = 0; y < map.size.y; y++) {
+          spritesMap[x] = [];
+        }
+      }
+      for (let x = 0; x < map.size.x; x++) {
+        for (let y = 0; y < map.size.y; y++) {
+          for (let key in map.tileId) {
+            if (map.tile.view[x][y] == key) {
+              spritesMap[x][y] = new PIXI.extras.MovieClip(texturesMap[key]);
+              spritesMap[x][y].position.set(x * WINDOW.TILE_SIZE, y * WINDOW.TILE_SIZE);
+              spritesMap[x][y].animationSpeed = 0.2;
+              spritesMap[x][y].play();
+              mapContainer.addChild(spritesMap[x][y]);
+            }
           }
         }
       }
+      root.addChild(mapContainer);
     }
+    {
+      // people
+      this.people = {
+        kimopen: 'kimopen',
+        player: 'player'
+      };
+      for (let name in this.people) {
+        this.texture[name] = new DirectionalTextures('./img', this.people[name]);
+      }
+      let player = this.player = new Human(this.texture.player);
+      player.animationSpeed = 0.12;
+      player.grid = {};
+      player.grid.x = this.status.player.grid.x;
+      player.grid.y = this.status.player.grid.y;
+      player.isMoving = false;
+      player.position.set(WINDOW.TILE_SIZE * player.grid.x, WINDOW.TILE_SIZE * player.grid.y);
+      this.mapContainer.addChild(player);
 
-    // containerMap <- player
-    // people
-    this.people = {
-      kimopen: 'kimopen',
-      player: 'player'
-    };
-    for (let name in this.people) {
-      this.texture[name] = new DirectionalTextures('./img', this.people[name]);
+      // kimopen
+      let kimopen = this.kimopen = new Human(this.texture.kimopen);
+      kimopen.animationSpeed = 0.24;
+      kimopen.grid = {};
+      kimopen.grid.x = 9;
+      kimopen.grid.y = 22;
+      kimopen.isMoving = false;
+      kimopen.position.set(WINDOW.TILE_SIZE * kimopen.grid.x, WINDOW.TILE_SIZE * kimopen.grid.y);
+      this.mapContainer.addChild(kimopen);
+      kimopen.play();
     }
-    let player = this.player = new Human(this.texture.player);
-    player.animationSpeed = 0.12;
-    player.grid = {};
-    player.grid.x = this.status.player.grid.x;
-    player.grid.y = this.status.player.grid.y;
-    player.isMoving = false;
-    player.position.set(WINDOW.TILE_SIZE * player.grid.x, WINDOW.TILE_SIZE * player.grid.y);
-    containerMap.addChild(player);
-
-    // kimopen
-    let kimopen = this.kimopen = new Human(this.texture.kimopen);
-    kimopen.animationSpeed = 0.24;
-    kimopen.grid = {};
-    kimopen.grid.x = 9;
-    kimopen.grid.y = 22;
-    kimopen.isMoving = false;
-    kimopen.position.set(WINDOW.TILE_SIZE * kimopen.grid.x, WINDOW.TILE_SIZE * kimopen.grid.y);
-    containerMap.addChild(kimopen);
-    kimopen.play();
-
-    // containerMap -> fieldMap
-    this.addChild(containerMap);
 
     // text
     let text = this.text = new PIXI.Container();
-    this.addChild(text);
+    root.addChild(text);
 
     // debug
     this.debug = new PIXI.Container();
-    //this.addChild(this.debug);
+    //root.addChild(this.debug);
     this.debug.battle = new PIXI.Text('Battle');
     this.debug.addChild(this.debug.battle);
     this.debug.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0);
@@ -112,7 +113,7 @@ module.exports = class Field extends Scene {
     this.fade.drawPolygon([0, 0, WINDOW.WIDTH, 0, WINDOW.WIDTH, WINDOW.HEIGHT, 0, WINDOW.HEIGHT]);
     this.fade.endFill();
     this.fade.alpha = 1;
-    this.addChild(this.fade);
+    root.addChild(this.fade);
 
     /* keyboard */ {
       this.addKeyboard('down', () => {}, () => {});
@@ -317,7 +318,6 @@ module.exports = class Field extends Scene {
     }
   }
   updateGlobal() {
-
   }
   fadeIn() {
     this.isFade = 'in';
