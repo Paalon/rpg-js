@@ -119,7 +119,7 @@ module.exports = class Field extends Scene {
       root.addKeyboard('up', () => {}, () => {});
       root.addKeyboard('right', () => {}, () => {});
       root.addKeyboard('left', () => {}, () => {});
-      root.addKeyboard('esc', () => {
+      root.addKeyboard('c', () => {
         this.sound.fx.gun_hit.play();
         let sentakushi = new ChoiceWindow(
           [

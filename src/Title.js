@@ -25,7 +25,7 @@ module.exports = class Title extends Scene {
     this.bgm = this.lib.sound.bgm.lake_in_the_morning_mist;
 
     { // textTitle
-      let textTitle = root.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
+      let textTitle = root.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'PixelMplus10-Regular', fontSize: 20, fill : 0xffffff, align : 'center'});
       textTitle.anchor.set(0.5, 0.5);
       textTitle.position = new WindowPoint(0.5, 0.4);
       textTitle.on('click', () => {
@@ -36,7 +36,7 @@ module.exports = class Title extends Scene {
     }
 
     { // buttonStart
-      let buttonStart = root.buttonStart = new PIXI.Text('PRESS Z', {fontFamily: 'mplus', fontSize: 12, fill: 0xffffff, align: 'center'});
+      let buttonStart = root.buttonStart = new PIXI.Text('PRESS Z', {fontFamily: 'PixelMplus10-Regular', fontSize: 10, fill: 0xffffff, align: 'center'});
       buttonStart.anchor.set(0.5, 0.5);
       buttonStart.position = new WindowPoint(0.5, 0.6);
       root.addInteractor(buttonStart);

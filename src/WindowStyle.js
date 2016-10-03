@@ -30,7 +30,7 @@ module.exports = class WindowStyle {
     if (this.frame_alpha == undefined) this.frame_alpha = 0.8;
     else this.frame_alpha = options.frame_alpha;
     //this.selected_style = new PIXI.TextStyle(options.selected_style);
-    if (this.unselected_style == undefined) this.unselected_style = new PIXI.TextStyle({fontSize: 10, fill: 0xffffff});
+    if (this.unselected_style == undefined) this.unselected_style = new PIXI.TextStyle({fontFamily: 'mplus-2c-light', fontSize: 10, fill: 0xffffff});
     else this.unselected_style = new PIXI.TextStyle(options.unselected_style);
   }
 };

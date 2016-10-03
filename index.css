@@ -1,9 +1,18 @@
 @font-face {
-  font-family: "mplus";
-  src: "./font/mplus-1p-medium.ttf";
+  font-family: "mplus-1p-medium";
+  src: url(./font/mplus-1p-medium.ttf);
+}
+@font-face {
+  font-family: "mplus-2c-light";
+  src: url(./font/mplus-2c-light.ttf);
+}
+@font-face {
+  font-family: "PixelMplus10-Regular";
+  src: url(./font/PixelMplus-20130602/PixelMplus10-Regular.ttf);
 }
 body {
   margin: 0px;
-  padding: 0px;
+  /* padding: 0px; */
+  overflow: hidden;
   background: #bdf;
 }

@@ -7,6 +7,7 @@
 'use strict';
 
 let PIXI = require('pixi.js/bin/pixi.js');
+let FontFaceObserver = require('fontfaceobserver');
 let SceneStack = require('./src/SceneStack.js');
 let WINDOW = require('./WindowSetting.js');
 let FileUtil = require('./FileUtil.js');
@@ -18,14 +19,22 @@ PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 // rendererの設定
 let renderer = PIXI.autoDetectRenderer(
   WINDOW.WIDTH, WINDOW.HEIGHT, {
-    backgroundColor: 0x111111,
+    backgroundColor: 0x444444,
     resolution: WINDOW.RESOLUTION,
     antialias: false
   },
   false
 );
+
 // pixiview要素に描写する
 document.getElementById("pixiview").appendChild(renderer.view);
+
+// フォント
+let font = {
+  mplus_1p_medium: new FontFaceObserver('mplus-1p-medium'),
+  mplus_2c_light: new FontFaceObserver('mplus-2c-light'),
+  pixel_mplus10_regular: new FontFaceObserver('PixelMplus10-Regular')
+};
 
 // ゲーム内のグローバル変数
 // library ゲームのすべてのパラメータを保持する
@@ -72,11 +81,24 @@ let img_number = img_paths.length;
 for (let path of img_paths) {
   PIXI.loader.add(path).load(() => {
     img_number--;
-    if (img_number == 0) onAssetsLoaded();
+    if (img_number == 0) onPIXILoaded();
   });
 }
 
-// アセットが読み込まれた時に実行される関数
+// PIXIアセットが読み込まれた時に実行される関数
+let onPIXILoaded = () => {
+  Promise.all([
+    font.mplus_1p_medium.load(),
+    font.mplus_2c_light.load(),
+    font.pixel_mplus10_regular.load()
+  ]).then(() => {
+    onFontLoaded();
+  });
+};
+
+let onFontLoaded = () => {
+  onAssetsLoaded();
+};
 let onAssetsLoaded = () => {
   sceneStack.init();
   animate();
