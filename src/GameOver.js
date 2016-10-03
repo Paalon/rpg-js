@@ -10,7 +10,7 @@ let PIXI = require('pixi.js/bin/pixi.js');
 
 let Scene = require('./Scene.js');
 let WINDOW = require('../WindowSetting.js');
-let Keyboard = require('../Keyboard.js');
+let Keyboard = require('./Keyboard.js');
 let sco = require('./SceneChangeOption.js');
 
 module.exports = class GameOver extends Scene {

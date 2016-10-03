@@ -1,1 +1,1 @@
-wc -l {.,scene}/*.js
+wc -l src/*.js ./*.js

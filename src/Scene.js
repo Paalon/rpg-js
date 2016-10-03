@@ -10,8 +10,6 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
-
-
 let Window = require('./Window.js');
 let WindowStack = require('./WindowStack.js');
 

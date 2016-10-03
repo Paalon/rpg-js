@@ -7,7 +7,7 @@
 'use strict';
 
 let PIXI = require('pixi.js/bin/pixi.js');
-let SceneStack = require('./scene/SceneStack.js');
+let SceneStack = require('./src/SceneStack.js');
 let WINDOW = require('./WindowSetting.js');
 let FileUtil = require('./FileUtil.js');
 let loadSound = require('./loadSound.js');
