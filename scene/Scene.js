@@ -10,26 +10,28 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
+
+
 let Window = require('./Window.js');
 let WindowStack = require('./WindowStack.js');
 
 module.exports = class Scene { // gstateに依存
-  constructor(lib) {
-    if (lib == undefined) throw new Error('ライブラリが与えられてないぜ。');
+  constructor() {
+    this.parent = undefined;
+    this.lib = undefined; // ロードしたものを参照しておく
+    this.sound = undefined;
     this.pixi = new PIXI.Container();
-    this.lib = lib; // ロードしたものを参照しておく
-    this.sound = lib.sound;
-
     this.keyboard = {}; // キーボード
     this.interactor = []; // 止めたり再生したりするもの
+    this.root_window = new Window();
+    this.window_stack = new WindowStack();
 
-    this.root_window = new Window(lib);
-    this.window_stack = new WindowStack(lib);
-
+    /*
     this.change = { // シーンの変化を扱う
       isDoing: false, // シーンの変化をするかどうか
       options: []
     };
+    */
     this.state = 'load'; // シーンの状態を保持
     this.STATE = { // シーンの状態
       load: 'load',
@@ -39,7 +41,20 @@ module.exports = class Scene { // gstateに依存
       change: 'change'
     };
     this.changeOption = null;
+
+    this.change = {
+      transit: (scene) => {
+        this.parent.transit(scene);
+      },
+      freeze: (scene) => {
+        this.parent.freeze(scene);
+      },
+      unfreeze: () => {
+        this.parent.unfreeze();
+      }
+    };
   }
+
   changeScene(options) { // シーン遷移
     this.state = 'change';
     this.changeOptions = options;

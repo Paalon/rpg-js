@@ -18,8 +18,8 @@ let ChoiceText = require('./ChoiceText.js');
 let ChoiceWindow = require('./ChoiceWindow.js');
 
 module.exports = class Title extends Scene {
-  constructor(lib) {
-    super(lib);
+  constructor() {
+    super();
   }
   init() {
     let root = this.root_window;
@@ -56,7 +56,8 @@ module.exports = class Title extends Scene {
           [
             new ChoiceText('はじめから', () => {
               this.lib.sound.fx.start.play();
-              this.changeScene([new sco('transit', 'Field')]);
+              this.change.transit('Field');
+              //this.changeScene([new sco('transit', 'Field')]);
             }),
             new ChoiceText('もどる', () => {
               cw.cancel();

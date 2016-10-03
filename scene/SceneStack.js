@@ -26,33 +26,44 @@ module.exports = class SceneStack {
   }
   // 一番最初のシーンを加える
   init() {
-    let first_scene = new Scenes.Title(this.lib);
+    let first_scene = new Scenes.Title();
     first_scene.parent = this;
+    first_scene.lib = this.lib;
+    first_scene.sound = this.lib.sound;
+
     this._stack.push(first_scene);
     this.root.addChild(first_scene.pixi);
     first_scene.init();
     first_scene.play();
   }
   // シーンを終了して次のシーンへ転換する
-  transit(next_scene) {
+  transit(next_scene_name) {
+    let next_scene = new Scenes[next_scene_name]();
+    next_scene.parent = this;
+    next_scene.lib = this.lib;
+    next_scene.sound = this.lib.sound;
+
     let present_scene = this._stack.pop(); // 今のシーンをポップ
     present_scene.finish(); // シーンの転換に必要な処理
     present_scene.removeChildren(); // シーンの上に載ってるスプライトをremove
-    this.root.removeChild(present_scene); // ルートから今のシーンをremove
-    next_scene.parent = this; // 親プロパティを登録
+    this.root.removeChild(present_scene.pixi); // ルートから今のシーンをremove
     this._stack.push(next_scene); // 次のシーンをスタック
-    this.root.addChild(next_scene); // ルートに次のシーンをadd
+    this.root.addChild(next_scene.pixi); // ルートに次のシーンをadd
     next_scene.init(); // 次のシーンの初期化
     next_scene.play();
     present_scene.state = 'load'; // 今のシーンの変化終了
   }
   // シーンを冷凍して次のシーンをプッシュする
   freeze(next_scene) {
+    next_scene = new Scenes[next_scene]();
+    next_scene.parent = this;
+    next_scene.lib = this.lib;
+    next_scene.sound = this.lib.sound;
+
     let present_scene = this.top();
     present_scene.pause(); // 停止処理
-    next_scene.parent = this; // 親プロパティを登録
     this._stack.push(next_scene);
-    this.root.addChild(next_scene);
+    this.root.addChild(next_scene.pixi);
     next_scene.init();
     next_scene.play();
     present_scene.state = 'load';
@@ -62,7 +73,7 @@ module.exports = class SceneStack {
     let present_scene = this._stack.pop();
     let next_scene = this.top();
     present_scene.finish();
-    this.root.removeChild(present_scene);
+    this.root.removeChild(present_scene.pixi);
     present_scene.removeChildren();
     next_scene.play();
     present_scene.state = 'load';
@@ -76,9 +87,10 @@ module.exports = class SceneStack {
     // update
     top_scene.update();
     // シーン遷移
+    /*
     if (top_scene.state == 'change') {
       top_scene.change();
-    }
+    }*/
   }
   change() {
     let top_scene = this.top();

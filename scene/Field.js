@@ -19,8 +19,8 @@ let ChoiceWindow = require('./ChoiceWindow.js');
 let WindowStyle = require('./WindowStyle.js');
 
 module.exports = class Field extends Scene {
-  constructor(lib) {
-    super(lib);
+  constructor() {
+    super();
     this.texture = {}; // テクスチャ保管
     this.map = undefined; // マップデータ
     this.PLAYER_WALKING_SPEED = 1;
@@ -122,7 +122,34 @@ module.exports = class Field extends Scene {
       this.addKeyboard('left', () => {}, () => {});
       this.addKeyboard('esc', () => {
         this.sound.fx.gun_hit.play();
-        let unselected_style = {fontSize: 10};
+        let sentakushi = new ChoiceWindow(
+          [
+            new ChoiceText('魔法', () => {
+              this.addWindow();
+            }),
+            new ChoiceText('閉じる', () => {
+              sentakushi.cancel();
+            }),
+            new ChoiceText('ゲームを終了', () => {
+              this.changeScene();
+            }),
+            new ChoiceText('サウンド設定', () => {
+              this.addWindow();
+            }),
+            new ChoiceText('敵と戦う（デバッグ用）', () => {
+              this.removeWindow();
+              this.changeScene([new sco('freeze', 'Battle')]);
+            }),
+            new ChoiceText('回復する（デバッグ用）', () => {
+              this.lib.status.player.hp = this.lib.status.player.def_hp;
+              this.lib.status.player.mp = this.lib.status.player.def_mp;
+            })
+          ],
+          new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}})
+        );
+        this.addWindow(sentakushi);
+
+        /*
         let sentakushi = new ChoiceWindow(
           [
             new Choice('魔法', unselected_style, () => {
@@ -170,13 +197,9 @@ module.exports = class Field extends Scene {
           this.lib
         );
         this.addWindow(sentakushi);
-
+        */
         //this.changeScene([new sco('freeze', 'FieldMenu')]);
         //this.sound.fx.gun_hit.play();
-      }, () => {});
-      this.addKeyboard('e', () => {
-        this.changeScene([new sco('freeze', 'FieldMenu')]);
-        this.sound.fx.gun_hit.play();
       }, () => {});
       this.addKeyboard('enter', () => {}, () => {});
       this.addKeyboard('z', () => {}, () => {});
