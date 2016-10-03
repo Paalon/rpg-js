@@ -27,6 +27,7 @@ module.exports = class SceneStack {
   // 一番最初のシーンを加える
   init() {
     let first_scene = new Scenes.Title(this.lib);
+    first_scene.parent = this;
     this._stack.push(first_scene);
     this.root.addChild(first_scene.pixi);
     first_scene.init();
@@ -38,6 +39,7 @@ module.exports = class SceneStack {
     present_scene.finish(); // シーンの転換に必要な処理
     present_scene.removeChildren(); // シーンの上に載ってるスプライトをremove
     this.root.removeChild(present_scene); // ルートから今のシーンをremove
+    next_scene.parent = this; // 親プロパティを登録
     this._stack.push(next_scene); // 次のシーンをスタック
     this.root.addChild(next_scene); // ルートに次のシーンをadd
     next_scene.init(); // 次のシーンの初期化
@@ -48,6 +50,7 @@ module.exports = class SceneStack {
   freeze(next_scene) {
     let present_scene = this.top();
     present_scene.pause(); // 停止処理
+    next_scene.parent = this; // 親プロパティを登録
     this._stack.push(next_scene);
     this.root.addChild(next_scene);
     next_scene.init();

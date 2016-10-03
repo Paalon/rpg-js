@@ -9,7 +9,7 @@
 let PIXI = require('pixi.js/bin/pixi.js');
 
 let Scene = require('./Scene.js');
-//let sco = require('./SceneChangeOption.js');
+let sco = require('./SceneChangeOption.js');
 let WindowPoint = require('./WindowPoint.js');
 let WindowStyle = require('./WindowStyle.js');
 //let StyledWindow = require('./StyledWindow.js');
@@ -56,7 +56,7 @@ module.exports = class Title extends Scene {
           [
             new ChoiceText('はじめから', () => {
               this.lib.sound.fx.start.play();
-              //this.changeScene([new sco('transit', 'Field')]);
+              this.changeScene([new sco('transit', 'Field')]);
             }),
             new ChoiceText('もどる', () => {
               cw.cancel();
