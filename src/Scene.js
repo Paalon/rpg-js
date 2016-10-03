@@ -77,7 +77,7 @@ module.exports = class Scene { // gstateに依存
     this.playBGM();
   }
   pause() { // 停止処理
-    this.pauseAllWindows();
+    this.window_stack.pause();
     this.pauseBGM();
   }
   update() { // 更新処理
