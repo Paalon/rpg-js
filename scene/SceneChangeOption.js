@@ -2,7 +2,7 @@
 // Copyright 2016 Paalon
 //
 // class SceneChangeOption
-//
+// deprecated
 
 'use strict';
 
