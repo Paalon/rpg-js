@@ -13,7 +13,6 @@ let Scene = require('./Scene.js');
 let DirectionalTextures = require('./DirectionalTextures.js');
 let FileUtil = require('../FileUtil.js');
 let Human = require('./Human.js');
-let sco = require('./SceneChangeOption.js');
 let ChoiceText = require('./ChoiceText.js');
 let ChoiceWindow = require('./ChoiceWindow.js');
 let WindowStyle = require('./WindowStyle.js');
