@@ -50,7 +50,7 @@ module.exports = class Scene { // gstateに依存
     };
   }
 
-  changeScene(options) { // シーン遷移
+  changeScene(options) { // シーン遷移 deprecated
     this.state = 'change';
     this.changeOptions = options;
     if (options[0].name == 'transit' || options[0].name == 'unfreeze') {
