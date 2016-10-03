@@ -22,7 +22,7 @@ module.exports = class Title extends Scene {
   }
   init() {
     let root = this.root_window;
-    this.bgm = this.lib.sound.bgm.main;
+    this.bgm = this.lib.sound.bgm.lake_in_the_morning_mist;
 
     { // textTitle
       let textTitle = root.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
@@ -56,7 +56,6 @@ module.exports = class Title extends Scene {
             new ChoiceText('はじめから', () => {
               this.lib.sound.fx.start.play();
               this.change.transit('Field');
-              //this.changeScene([new sco('transit', 'Field')]);
             }),
             new ChoiceText('もどる', () => {
               cw.cancel();

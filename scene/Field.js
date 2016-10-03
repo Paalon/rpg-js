@@ -38,9 +38,9 @@ module.exports = class Field extends Scene {
         let spriteFrames = FileUtil.fromSpriteSheet("./map/tile", map.tileId[key]);
         texturesMap[key] = spriteFrames;
       }
-      // タイルのスプライト生成 tiles -> containerMap
+      // タイルのスプライト生成 tiles -> mapContainer
       let spritesMap = [];
-      let mapContainer = this.mapContainer = new PIXI.Container();
+      let mapContainer = root.mapContainer = new PIXI.Container();
       for (let x = 0; x < map.size.x; x++) {
         for (let y = 0; y < map.size.y; y++) {
           spritesMap[x] = [];
@@ -63,48 +63,47 @@ module.exports = class Field extends Scene {
     }
     {
       // people
-      this.people = {
+      root.people = {
         kimopen: 'kimopen',
         player: 'player'
       };
-      for (let name in this.people) {
-        this.texture[name] = new DirectionalTextures('./img', this.people[name]);
+      for (let name in root.people) {
+        this.texture[name] = new DirectionalTextures('./img', root.people[name]);
       }
-      let player = this.player = new Human(this.texture.player);
+      let player = root.player = new Human(this.texture.player);
       player.animationSpeed = 0.12;
       player.grid = {};
       player.grid.x = this.lib.status.player.grid.x;
       player.grid.y = this.lib.status.player.grid.y;
       player.isMoving = false;
       player.position.set(WINDOW.TILE_SIZE * player.grid.x, WINDOW.TILE_SIZE * player.grid.y);
-      this.mapContainer.addChild(player);
+      root.mapContainer.addChild(player);
 
       // kimopen
-      let kimopen = this.kimopen = new Human(this.texture.kimopen);
+      let kimopen = root.kimopen = new Human(this.texture.kimopen);
       kimopen.animationSpeed = 0.24;
       kimopen.grid = {};
       kimopen.grid.x = 9;
       kimopen.grid.y = 22;
       kimopen.isMoving = false;
       kimopen.position.set(WINDOW.TILE_SIZE * kimopen.grid.x, WINDOW.TILE_SIZE * kimopen.grid.y);
-      this.mapContainer.addChild(kimopen);
+      root.mapContainer.addChild(kimopen);
       kimopen.play();
     }
 
     // text
-    let text = this.text = new PIXI.Container();
+    let text = root.text = new PIXI.Container();
     root.addChild(text);
 
     // debug
-    this.debug = new PIXI.Container();
+    let debug = root.debug = new PIXI.Container();
     //root.addChild(this.debug);
-    this.debug.battle = new PIXI.Text('Battle');
-    this.debug.addChild(this.debug.battle);
-    this.debug.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0);
-    root.addInteractor(this.debug.battle);
-    this.debug.battle.on('click', () => {
-      this.changeScene([new sco('freeze', 'Battle')]);
-      //this.freeze('Battle', null);
+    debug.battle = new PIXI.Text('Battle');
+    debug.addChild(debug.battle);
+    debug.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0);
+    root.addInteractor(debug.battle);
+    debug.battle.on('click', () => {
+      this.change.freeze('Battle');
     });
 
     // fade
@@ -206,132 +205,133 @@ module.exports = class Field extends Scene {
       root.addKeyboard('z', () => {}, () => {});
       root.addKeyboard('x', () => {}, () => {});
     }
-  }
+    root.state = 'play';
 
-  updateLocal() {
-    switch (this.isFade) {
-      case 'in': {
-        this.fade.alpha -= 0.05;
-        if (this.fade.alpha <= 0) {
-          this.fade.alpha = 0;
-          this.isFade = 'no';
-        }
-        break;
-      }
-      case 'out': {
-        this.fade.alpha += 0.05;
-        if (this.fade.alpha >= 1) {
-          this.fade.alpha = 1;
-          this.isFade = 'no';
-          this.changeScene([new sco('freeze', this.next_scene)]);
-          //this.freeze(this.next_scene, this.next_info);
-        }
-        break;
-      }
-      default: {
-        // 移動先座標設定
-        let player = this.player;
-        let keyboard = this.keyboard;
-        if (keyboard.left.isDown) { // 押されているとき
-          if (!player.isMoving) { // 移動中でないとき
-            player.setDirection('left'); // 左を向く
-            if (this.map.tile.view[player.grid.x - 1][player.grid.y] !== "1") { // 衝突判定
-              player.grid.x -= 1;
-              player.isMoving = true;
-              player.play();
+    root.updateLocal = () => {
+      let self = root;
+      switch (root.state) {
+        case 'play': {
+          // 移動先座標設定
+          let player = self.player;
+          let keyboard = self.keyboard;
+          if (keyboard.left.isDown) { // 押されているとき
+            if (!player.isMoving) { // 移動中でないとき
+              player.setDirection('left'); // 左を向く
+              if (this.map.tile.view[player.grid.x - 1][player.grid.y] !== "1") { // 衝突判定
+                player.grid.x -= 1;
+                player.isMoving = true;
+                player.play();
+              }
             }
           }
-        }
-        if (keyboard.right.isDown) {
-          if (!player.isMoving) {
-            player.setDirection('right');
-            if (this.map.tile.view[player.grid.x + 1][player.grid.y] !== "1") {
-              player.grid.x += 1;
-              player.isMoving = true;
-              player.play();
+          if (keyboard.right.isDown) {
+            if (!player.isMoving) {
+              player.setDirection('right');
+              if (this.map.tile.view[player.grid.x + 1][player.grid.y] !== "1") {
+                player.grid.x += 1;
+                player.isMoving = true;
+                player.play();
+              }
             }
+            //player.position.x += 1;
           }
-          //player.position.x += 1;
-        }
-        if (keyboard.up.isDown) {
-          if (!player.isMoving) {
-            player.setDirection('back');
-            if (this.map.tile.view[player.grid.x][player.grid.y - 1] !== "1") {
-              player.grid.y -= 1;
-              player.isMoving = true;
-              player.play();
+          if (keyboard.up.isDown) {
+            if (!player.isMoving) {
+              player.setDirection('back');
+              if (this.map.tile.view[player.grid.x][player.grid.y - 1] !== "1") {
+                player.grid.y -= 1;
+                player.isMoving = true;
+                player.play();
+              }
             }
+            //player.position.y -= 1;
           }
-          //player.position.y -= 1;
-        }
-        if (keyboard.down.isDown) {
-          if (!player.isMoving) {
-            player.setDirection('front');
-            if (this.map.tile.view[player.grid.x][player.grid.y + 1] !== "1") {
-              player.grid.y += 1;
-              player.isMoving = true;
-              player.play();
+          if (keyboard.down.isDown) {
+            if (!player.isMoving) {
+              player.setDirection('front');
+              if (this.map.tile.view[player.grid.x][player.grid.y + 1] !== "1") {
+                player.grid.y += 1;
+                player.isMoving = true;
+                player.play();
+              }
             }
+            //player.position.y += 1;
           }
-          //player.position.y += 1;
-        }
-        // プレイヤー移動
-        // 多分大丈夫だけどちょっと雑
-        if (player.isMoving) {
-          let vect = {x: 1, y: 0};
-          vect.x = WINDOW.TILE_SIZE * player.grid.x - player.position.x;
-          vect.y = WINDOW.TILE_SIZE * player.grid.y - player.position.y;
-          let dist = Math.abs(vect.x) + Math.abs(vect.y);
-          if (dist < 1) {
-            player.position.set(WINDOW.TILE_SIZE * player.grid.x, WINDOW.TILE_SIZE * player.grid.y);
-            player.isMoving = false;
-            player.gotoAndStop(0);
-          } else {
-            // 規格化
-            let norm = Math.sqrt(vect.x * vect.x + vect.y * vect.y);
-            vect.x /= norm;
-            vect.y /= norm;
-            // 歩く速さを適用
-            vect.x *= this.PLAYER_WALKING_SPEED;
-            vect.y *= this.PLAYER_WALKING_SPEED;
-            player.position.x += vect.x;
-            player.position.y += vect.y;
+          // プレイヤー移動
+          // 多分大丈夫だけどちょっと雑
+          if (player.isMoving) {
+            let vect = {x: 1, y: 0};
             vect.x = WINDOW.TILE_SIZE * player.grid.x - player.position.x;
             vect.y = WINDOW.TILE_SIZE * player.grid.y - player.position.y;
-            let next_dist = Math.abs(vect.x) + Math.abs(vect.y);
-            if (dist < next_dist) {
+            let dist = Math.abs(vect.x) + Math.abs(vect.y);
+            if (dist < 1) {
               player.position.set(WINDOW.TILE_SIZE * player.grid.x, WINDOW.TILE_SIZE * player.grid.y);
               player.isMoving = false;
               player.gotoAndStop(0);
+            } else {
+              // 規格化
+              let norm = Math.sqrt(vect.x * vect.x + vect.y * vect.y);
+              vect.x /= norm;
+              vect.y /= norm;
+              // 歩く速さを適用
+              vect.x *= this.PLAYER_WALKING_SPEED;
+              vect.y *= this.PLAYER_WALKING_SPEED;
+              player.position.x += vect.x;
+              player.position.y += vect.y;
+              vect.x = WINDOW.TILE_SIZE * player.grid.x - player.position.x;
+              vect.y = WINDOW.TILE_SIZE * player.grid.y - player.position.y;
+              let next_dist = Math.abs(vect.x) + Math.abs(vect.y);
+              if (dist < next_dist) {
+                player.position.set(WINDOW.TILE_SIZE * player.grid.x, WINDOW.TILE_SIZE * player.grid.y);
+                player.isMoving = false;
+                player.gotoAndStop(0);
+              }
+            }
+            if (player.isMoving == false) { // エンカウント判定
+              if (Math.random() < 0.1) {
+                //this.change.freeze('Battle'); // 一時的にOFF
+              }
             }
           }
-          if (player.isMoving == false) { // エンカウント判定
-            if (Math.random() < 0.1) {
-              this.fadeOut('Battle', null);
-            }
-          }
-        }
-        // 画面移動
-        this.containerMap.position.set(WINDOW.WIDTH * 0.5 - player.position.x, WINDOW.HEIGHT * 0.5 - player.position.y);
-        // 保存
-        this.status.player.grid.x = this.player.grid.x;
-        this.status.player.grid.y = this.player.grid.y;
+          // 画面移動
+          root.mapContainer.position.set(WINDOW.WIDTH * 0.5 - player.position.x, WINDOW.HEIGHT * 0.5 - player.position.y);
+          // 保存
+          this.lib.status.player.grid.x = root.player.grid.x;
+          this.lib.status.player.grid.y = root.player.grid.y;
 
-        // kimopen
-        if (Math.random() < 0.01) {
-          this.kimopen.turnLeft();
+          // kimopen
+          if (Math.random() < 0.01) {
+            root.kimopen.turnLeft();
+          }
+          break;
+        }
+        default:
+      }
+      /*
+      switch (this.isFade) {
+        case 'in': {
+          this.fade.alpha -= 0.05;
+          if (this.fade.alpha <= 0) {
+            this.fade.alpha = 0;
+            this.isFade = 'no';
+          }
+          break;
+        }
+        case 'out': {
+          this.fade.alpha += 0.05;
+          if (this.fade.alpha >= 1) {
+            this.fade.alpha = 1;
+            this.isFade = 'no';
+            this.changeScene([new sco('freeze', this.next_scene)]);
+            //this.freeze(this.next_scene, this.next_info);
+          }
+          break;
+        }
+        default: {
+
         }
       }
-    }
-  }
-  updateGlobal() {
-  }
-  fadeIn() {
-    this.isFade = 'in';
-  }
-  fadeOut(scene, info) {
-    this.isFade = 'out';
-    this.next_scene = scene;
-    this.next_info = info;
+      */
+    };
   }
 };

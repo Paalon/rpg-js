@@ -22,7 +22,7 @@ module.exports = class Window {
     // Interactor management
     this.interactor = []; // 止めたり再生したりするもの
     // Window state
-    this._state = 'load'; // ウィンドウの状態を保持する
+    this.state = 'load'; // ウィンドウの状態を保持する
   }
   addChild(child) {
     this.pixi.addChild(child);
@@ -36,9 +36,11 @@ module.exports = class Window {
   init() {
     this.bindAllKeys();
     this.activate();
+    this.state = 'play';
   }
   finish() {
     this.unbindAllKeys();
+    console.log('window finish');
     this.inactivate();
   }
   play() {
@@ -85,25 +87,4 @@ module.exports = class Window {
   inactivate() { // inactivate interactors
     this.interactor.map((interactor) => {interactor.interactive = false;} );
   }
-  setState(state) {
-    let hit = false;
-    for (let s of STATE) { // enum的な型チェック
-      if (state == s) {
-        this._state = state;
-        hit = true;
-      }
-    }
-    if (hit) throw new Error('指定したstateが変だよ。');
-  }
-  getState() {
-    return this._state;
-  }
-};
-
-let STATE = { // enum State
-  load: 'load',
-  fadeIn: 'fadeIn',
-  fadeOut: 'fadeOut',
-  message: 'message',
-  select: 'select'
 };

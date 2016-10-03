@@ -34,17 +34,11 @@ module.exports = class Scene { // gstateに依存
     };
     */
     this.state = 'load'; // シーンの状態を保持
-    this.STATE = { // シーンの状態
-      load: 'load',
-      fadeIn: 'fadeIn',
-      fadeOut: 'fadeOut',
-      message: 'message',
-      change: 'change'
-    };
     this.changeOption = null;
 
     this.change = {
       transit: (scene) => {
+        this.finish();
         this.parent.transit(scene);
       },
       freeze: (scene) => {
@@ -77,7 +71,7 @@ module.exports = class Scene { // gstateに依存
 
   }
   finish() { // 終了処理
-    this.removeAllWindows();
+    this.window_stack.finish();
     this.stopBGM();
   }
   play() { // 再開処理

@@ -29,7 +29,7 @@ module.exports = class WindowsStack {
       this.top().pause();
       this._stack.push(next_window);
       this.top().init();
-    }  
+    }
   }
   unfreeze() { // 一番上のウィンドウを解凍する
     if (this._stack.length == 0) {
@@ -58,6 +58,8 @@ module.exports = class WindowsStack {
     for (let i = 0; i < this._stack.length - 1; i++) {
       this.unfreeze();
     }
+    this.top().finish();
+    console.log('WindowStackの_stackは ' + this._stack);
   }
   pause() { // スタックに入っているすべてのwindowのkeyboardをunbindする 未実装
   }

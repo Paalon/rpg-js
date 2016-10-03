@@ -27,9 +27,11 @@ module.exports = class Keyboard {
     };
   }
   bind() {
+    console.log('bind: ' + this.name);
     keyboardJS.on(this.name, this.pressHandler, this.releaseHandler);
   }
   unbind() {
+    console.log('unbind: ' + this.name);
     keyboardJS.off(this.name, this.pressHandler, this.releaseHandler);
   }
 };
