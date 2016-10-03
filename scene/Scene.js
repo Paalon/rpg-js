@@ -20,12 +20,13 @@ module.exports = class Scene { // gstateに依存
     this.parent = undefined;
     this.lib = undefined; // ロードしたものを参照しておく
     this.sound = undefined;
+    this.bgm = undefined; // 今流しているbgm
     this.pixi = new PIXI.Container();
     this.keyboard = {}; // キーボード
     this.interactor = []; // 止めたり再生したりするもの
     this.root_window = new Window();
     this.window_stack = new WindowStack();
-
+    this.addWindow(this.root_window);
     /*
     this.change = { // シーンの変化を扱う
       isDoing: false, // シーンの変化をするかどうか
@@ -73,16 +74,19 @@ module.exports = class Scene { // gstateに依存
     this.pixi.removeChildren();
   }
   init() { // 初期化処理
-    this.addWindow(this.root_window);
+
   }
   finish() { // 終了処理
     this.removeAllWindows();
+    this.stopBGM();
   }
   play() { // 再開処理
     this.window_stack.play();
+    this.playBGM();
   }
   pause() { // 停止処理
     this.pauseAllWindows();
+    this.pauseBGM();
   }
   update() { // 更新処理
     this.window_stack.update(); // window_stackを更新する
@@ -103,5 +107,26 @@ module.exports = class Scene { // gstateに依存
     while (this.window_stack.length() > 1)  {
       this.removeWindow();
     }
+  }
+  playBGM() { // セットされたbgmを再生
+    if (this.bgm !== undefined) {
+      this.bgm.play();
+    }
+  }
+  pauseBGM() {
+    if (this.bgm !== undefined) {
+      this.bgm.pause();
+    }
+  }
+  stopBGM() {
+    if (this.bgm !== undefined) {
+      this.bgm.stop();
+    }
+  }
+  setBGM(bgm) {
+    if (this.bgm !== undefined) {
+      this.stopBGM();
+    }
+    this.bgm = bgm;
   }
 };

@@ -27,7 +27,7 @@ module.exports = class Field extends Scene {
   }
   init() {
     let root = this.root_window;
-    this.addWindow(root);
+    this.bgm = this.lib.sound.bgm.main;
 
     { // マップ読み込み
       let map_file_name = "./map/sample.json";
@@ -73,8 +73,8 @@ module.exports = class Field extends Scene {
       let player = this.player = new Human(this.texture.player);
       player.animationSpeed = 0.12;
       player.grid = {};
-      player.grid.x = this.status.player.grid.x;
-      player.grid.y = this.status.player.grid.y;
+      player.grid.x = this.lib.status.player.grid.x;
+      player.grid.y = this.lib.status.player.grid.y;
       player.isMoving = false;
       player.position.set(WINDOW.TILE_SIZE * player.grid.x, WINDOW.TILE_SIZE * player.grid.y);
       this.mapContainer.addChild(player);
@@ -101,26 +101,27 @@ module.exports = class Field extends Scene {
     this.debug.battle = new PIXI.Text('Battle');
     this.debug.addChild(this.debug.battle);
     this.debug.position.set(WINDOW.WIDTH * 0.5, WINDOW.HEIGHT * 0);
-    this.addInteractor(this.debug.battle);
+    root.addInteractor(this.debug.battle);
     this.debug.battle.on('click', () => {
       this.changeScene([new sco('freeze', 'Battle')]);
       //this.freeze('Battle', null);
     });
 
     // fade
+    /*
     this.fade = new PIXI.Graphics();
     this.fade.beginFill(0x000000);
     this.fade.drawPolygon([0, 0, WINDOW.WIDTH, 0, WINDOW.WIDTH, WINDOW.HEIGHT, 0, WINDOW.HEIGHT]);
     this.fade.endFill();
     this.fade.alpha = 1;
     root.addChild(this.fade);
-
+    */
     /* keyboard */ {
-      this.addKeyboard('down', () => {}, () => {});
-      this.addKeyboard('up', () => {}, () => {});
-      this.addKeyboard('right', () => {}, () => {});
-      this.addKeyboard('left', () => {}, () => {});
-      this.addKeyboard('esc', () => {
+      root.addKeyboard('down', () => {}, () => {});
+      root.addKeyboard('up', () => {}, () => {});
+      root.addKeyboard('right', () => {}, () => {});
+      root.addKeyboard('left', () => {}, () => {});
+      root.addKeyboard('esc', () => {
         this.sound.fx.gun_hit.play();
         let sentakushi = new ChoiceWindow(
           [
@@ -131,14 +132,14 @@ module.exports = class Field extends Scene {
               sentakushi.cancel();
             }),
             new ChoiceText('ゲームを終了', () => {
-              this.changeScene();
+              this.change.transit('Title');
             }),
             new ChoiceText('サウンド設定', () => {
               this.addWindow();
             }),
             new ChoiceText('敵と戦う（デバッグ用）', () => {
               this.removeWindow();
-              this.changeScene([new sco('freeze', 'Battle')]);
+              this.change.freeze('Battle');
             }),
             new ChoiceText('回復する（デバッグ用）', () => {
               this.lib.status.player.hp = this.lib.status.player.def_hp;
@@ -201,29 +202,12 @@ module.exports = class Field extends Scene {
         //this.changeScene([new sco('freeze', 'FieldMenu')]);
         //this.sound.fx.gun_hit.play();
       }, () => {});
-      this.addKeyboard('enter', () => {}, () => {});
-      this.addKeyboard('z', () => {}, () => {});
-      this.addKeyboard('x', () => {}, () => {});
+      root.addKeyboard('enter', () => {}, () => {});
+      root.addKeyboard('z', () => {}, () => {});
+      root.addKeyboard('x', () => {}, () => {});
     }
-
-  }
-  finish() {
-    this.unbindAllKeys();
-    this.inactivate();
-    this.sound.bgm.main.stop();
-  }
-  play() {
-    this.fadeIn();
-    this.bindAllKeys();
-    this.activate();
-    this.sound.bgm.main.play();
   }
 
-  pause() {
-    this.unbindAllKeys();
-    this.inactivate();
-    this.sound.bgm.main.pause();
-  }
   updateLocal() {
     switch (this.isFade) {
       case 'in': {

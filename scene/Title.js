@@ -9,7 +9,6 @@
 let PIXI = require('pixi.js/bin/pixi.js');
 
 let Scene = require('./Scene.js');
-let sco = require('./SceneChangeOption.js');
 let WindowPoint = require('./WindowPoint.js');
 let WindowStyle = require('./WindowStyle.js');
 //let StyledWindow = require('./StyledWindow.js');
@@ -23,7 +22,7 @@ module.exports = class Title extends Scene {
   }
   init() {
     let root = this.root_window;
-    this.addWindow(root);
+    this.bgm = this.lib.sound.bgm.main;
 
     { // textTitle
       let textTitle = root.textTitle = new PIXI.Text('RPG-js', {fontFamily: 'mplus', fontSize: 12, fill : 0xffffff, align : 'center'});
