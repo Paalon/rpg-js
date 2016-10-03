@@ -59,7 +59,6 @@ module.exports = class WindowsStack {
       this.unfreeze();
     }
     this.top().finish();
-    console.log('WindowStackの_stackは ' + this._stack);
   }
   pause() { // スタックに入っているすべてのwindowのkeyboardをunbindする 未実装
     for (let window of this._stack) {
