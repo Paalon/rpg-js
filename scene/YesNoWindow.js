@@ -4,10 +4,17 @@
 // class YesNoWindow
 //
 
-let Window = require('./Window.js');
+'use strict';
 
-module.exports = class YesNoWindow extends Window {
-  constructor() {
+let ChoiceWindow = require('./ChoiceWindow.js');
+let TextChoice = require('./TextChiooce.js');
 
+module.exports = class YesNoWindow extends ChoiceWindow {
+  constructor(yes, no, style) {
+    let choices = [
+      new TextChoice('はい', yes),
+      new TextChoice('いいえ', no)
+    ];
+    super(choices, style);
   }
 };
