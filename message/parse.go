@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -22,13 +23,16 @@ func main() {
 	line := Keyword{"line", "l"}
 	wait := Keyword{"wait", "w"}
 	clear := Keyword{"clear", "c"}
+	end := Keyword{"end", "e"}
 
 	keywords := []Keyword{
-		line, wait, clear,
+		line, wait, clear, end,
 	}
 
 	message := string(data)
 	// コメントを取り除く
+	rep := regexp.MustCompile(`/\*[\s\S]*?\*/|//.*`)
+	message = rep.ReplaceAllString(message, "")
 	// 改行を取り除く
 	message = strings.Replace(message, "\n", "", -1)
 
@@ -37,12 +41,16 @@ func main() {
 		rep := regexp.MustCompile(`\$` + keyword.Full + `|\$` + keyword.Short)
 		message = rep.ReplaceAllString(message, "#"+keyword.Full+"#")
 	}
-	fmt.Println(message)
 
-	/*
-		slice := strings.Split(message, "$")
-		for _, x := range slice {
-			fmt.Println(x)
-		}
-	*/
+	//fmt.Println(message)
+
+	// 出力
+	file, err := os.Create(`test.message`)
+	if err != nil {
+		// Openエラー処理
+	}
+	defer file.Close()
+
+	output := message
+	file.Write(([]byte)(output))
 }
