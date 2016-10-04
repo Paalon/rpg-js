@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"strings"
 )
 
@@ -27,15 +28,17 @@ func main() {
 	}
 
 	message := string(data)
+	// コメントを取り除く
 	// 改行を取り除く
 	message = strings.Replace(message, "\n", "", -1)
 
 	// shortから先にパース
 	for _, keyword := range keywords {
-		message = strings.Replace(message, "$"+keyword.Short, "$"+keyword.Full, -1)
-		message = strings.Replace(message, "$"+keyword.Full, "$"+keyword.Full+"$", -1)
+		rep := regexp.MustCompile(`\$` + keyword.Full + `|\$` + keyword.Short)
+		message = rep.ReplaceAllString(message, "#"+keyword.Full+"#")
 	}
 	fmt.Println(message)
+
 	/*
 		slice := strings.Split(message, "$")
 		for _, x := range slice {
