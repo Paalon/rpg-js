@@ -2,7 +2,7 @@
 // Copyright 2016 Paalon
 //
 // class FieldMenuMahou
-//
+// deprecated
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
