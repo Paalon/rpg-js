@@ -1,3 +1,6 @@
+windowに状態を持たせてfadeIn, fadeOut, play, messageShowing, messageWaitingなどを実装する。
+メッセージに自分独自の符号（文法）を導入してゆっくり表示する部分や早く表示する部分、発する効果音の設定、
+enter待ちにするかどうかを記述できるようにする
 
 ダメージの表示が重なるのを防ぐ
 

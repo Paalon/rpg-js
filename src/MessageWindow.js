@@ -14,6 +14,7 @@ module.exports = class MessageWindow extends StyledWindow {
   constructor(message, style) {
     super(style);
     this.message = message;
+    this.time = 0;
     this.cool = 0;
     this.coolingInterval = 3;
   }
@@ -22,24 +23,45 @@ module.exports = class MessageWindow extends StyledWindow {
     this.messageLength = this.splitMessage.length;
     let messageSprite = this.messageSprite = new PIXI.Text('', this.style.unselected_style);
     this.addChild(messageSprite);
+    this.addKeyboard('z', () => {}, () => {});
+
     this.bindAllKeys();
     this.activate();
-    this.state = 'play';
-  }
-  updateLocal() {
-    if (this.cool <= 0) {
-      if (this.messageLength > 0) {
-        this.lib.sound.fx.message.play();
-        this.messageSprite.text += this.splitMessage.shift();
-        this.messageLength--;
-        this.cool += this.coolingInterval;
+    this.state = 'messageShowing';
+
+    this.updateL.fadeIn = () => {
+      this.time++;
+    };
+    this.updateL.play = () => {
+    };
+    this.updateL.messageShowing = () => {
+      if (this.cool <= 0) {
+        if (this.messageLength > 0) {
+          let char = this.splitMessage.shift();
+          this.messageSprite.text += char;
+          this.messageLength--;
+          if (char == '\n') {
+            this.cool += 5 * this.coolingInterval;
+          } else {
+            this.lib.sound.fx.message.play();
+            this.cool += this.coolingInterval;
+          }
+
+          this.cool--;
+        }
+      } else {
         this.cool--;
       }
-    } else {
-      this.cool--;
-    }
-    if (this.cool == 0 && this.messageLength == 0) {
-      this.parent.removeWindow();
-    }
+      if (this.cool == 0 && this.messageLength == 0) {
+        this.state = 'messageWaiting';
+
+      }
+    };
+    this.updateL.messageWaiting = () => {
+      if (this.keyboard.z.isDown) {
+        this.parent.removeWindow();
+        this.state = 'finished';
+      }
+    };
   }
 };

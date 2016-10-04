@@ -13,7 +13,7 @@ module.exports = function loadSound() {
     bgm: {},
     fx: {},
     fxNumber: 0,
-    FX_MAX_NUMBER: 12,
+    FX_MAX_NUMBER: 32,
     BGM_VOLUME: 0.2,
     FX_VOLUME: 0.5,
     DEFAULT_BGM_VOLUME: 0.2,

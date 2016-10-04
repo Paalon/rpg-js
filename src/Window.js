@@ -22,7 +22,28 @@ module.exports = class Window {
     // Interactor management
     this.interactor = []; // 止めたり再生したりするもの
     // Window state
-    this.state = 'load'; // ウィンドウの状態を保持する
+    this.state = 'init'; // ウィンドウの状態を保持する
+
+    this.updateG = {
+      init: () => {},
+      fadeIn: () => {},
+      fadeOut: () => {},
+      play: () => {},
+      pause: () => {},
+      messageShowing: () => {},
+      messageWaiting: () => {},
+      finished: () => {}
+    };
+    this.updateL = {
+      init: () => {},
+      fadeIn: () => {},
+      fadeOut: () => {},
+      play: () => {},
+      pause: () => {},
+      messageShowing: () => {},
+      messageWaiting: () => {},
+      finished: () => {}
+    };
   }
   addChild(child) {
     this.pixi.addChild(child);
@@ -40,7 +61,6 @@ module.exports = class Window {
   }
   finish() {
     this.unbindAllKeys();
-    console.log('window finish');
     this.inactivate();
   }
   play() {
@@ -52,8 +72,10 @@ module.exports = class Window {
     this.inactivate();
   }
   updateGlobal() {
+    this.updateG[this.state]();
   }
   updateLocal() {
+    this.updateL[this.state]();
   }
   addKeyboard(keyName, pressed, released) {
     // todo: keyboardjsに合わせてkeyNameを解析してfixしたほうがいいかも + Keyboard.jsも
