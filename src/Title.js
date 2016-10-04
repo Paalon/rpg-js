@@ -8,14 +8,14 @@
 
 let PIXI = require('pixi.js/bin/pixi.js');
 
+let FileUtil = require('../FileUtil.js');
+
 let Scene = require('./Scene.js');
 let WindowPoint = require('./WindowPoint.js');
 let WindowStyle = require('./WindowStyle.js');
-//let StyledWindow = require('./StyledWindow.js');
 
 let ChoiceText = require('./ChoiceText.js');
 let ChoiceWindow = require('./ChoiceWindow.js');
-let StyledWindow = require('./StyledWindow.js');
 let MessageWindow = require('./MessageWindow.js');
 
 module.exports = class Title extends Scene {
@@ -61,11 +61,14 @@ module.exports = class Title extends Scene {
             }),
             new ChoiceText('めっせーじてすと', () => {
               this.lib.sound.fx.done.play();
-              let mw = new MessageWindow(
+              let file = FileUtil.loadFile('./message/test.msg');
+              let mw = new MessageWindow(file
+                /*
 `めっせーじてすとを行っています。
 全部表示したら、なんとこのウィンドウは消えちゃいます。
 さようーならー！！！！
 ばいばい。`
+              */
               );
               this.addWindow(mw);
             }),
