@@ -21,12 +21,13 @@ func main() {
 	}
 
 	line := Keyword{"line", "l"}
+	rest := Keyword{"rest", "r"}
 	wait := Keyword{"wait", "w"}
 	clear := Keyword{"clear", "c"}
 	end := Keyword{"end", "e"}
 
 	keywords := []Keyword{
-		line, wait, clear, end,
+		line, rest, wait, clear, end,
 	}
 
 	message := string(data)

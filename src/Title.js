@@ -61,7 +61,7 @@ module.exports = class Title extends Scene {
             }),
             new ChoiceText('めっせーじてすと', () => {
               this.lib.sound.fx.done.play();
-              let file = FileUtil.loadFile('./message/test.msg');
+              let file = FileUtil.loadFile('./message/test.message');
               let mw = new MessageWindow(file
                 /*
 `めっせーじてすとを行っています。

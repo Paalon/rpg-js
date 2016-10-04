@@ -35,29 +35,67 @@ module.exports = class MessageWindow extends StyledWindow {
     this.updateL.play = () => {
     };
     this.updateL.messageShowing = () => {
-      if (this.cool <= 0) {
-        if (this.messageLength > 0) {
+      if (this.cool <= 0) { // 文字を表示してもいい時間のとき
+        if (this.messageLength > 0) { // まだ文字が残っているとき
           let char = this.splitMessage.shift();
-          this.messageSprite.text += char;
           this.messageLength--;
-          if (char == '\n') {
-            this.cool += 5 * this.coolingInterval;
-          } else {
+          if (char == '#') { // 命令のとき
+            let command = '';
+            while (true) {
+              let char2 = this.splitMessage.shift();
+              this.messageLength--;
+              if (char2 == '#') {
+                break;
+              } else {
+                command += char2;
+              }
+            }
+            // 命令に合わせて分岐
+            console.log(command);
+            switch (command) {
+              case 'line': {
+                console.log('line');
+                this.messageSprite.text += '\n';
+                break;
+              }
+              case 'rest': {
+                this.cool += 5 * this.coolingInterval;
+                break;
+              }
+              case 'wait': {
+                this.state = 'messageWaiting';
+                break;
+              }
+              case 'clear': {
+                this.messageSprite.text = '';
+                break;
+              }
+              case 'end': {
+                this.state = '';
+                break;
+              }
+              default:
+            }
+          } else { // 命令じゃなくて普通の文字のとき
+            this.messageSprite.text += char;
             this.lib.sound.fx.message.play();
             this.cool += this.coolingInterval;
+            this.cool--;
           }
-
-          this.cool--;
         }
       } else {
         this.cool--;
       }
       if (this.cool == 0 && this.messageLength == 0) {
-        this.state = 'messageWaiting';
-
+        this.state = 'messageEnding';
       }
     };
     this.updateL.messageWaiting = () => {
+      if (this.keyboard.z.isDown) {
+        this.state = 'messageShowing';
+      }
+    };
+    this.updateL.messageEnding = () => {
       if (this.keyboard.z.isDown) {
         this.parent.removeWindow();
         this.state = 'finished';

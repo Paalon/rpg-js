@@ -32,6 +32,7 @@ module.exports = class Window {
       pause: () => {},
       messageShowing: () => {},
       messageWaiting: () => {},
+      messageEnding: () => {},
       finished: () => {}
     };
     this.updateL = {
@@ -42,6 +43,7 @@ module.exports = class Window {
       pause: () => {},
       messageShowing: () => {},
       messageWaiting: () => {},
+      messageEnding: () => {},
       finished: () => {}
     };
   }
