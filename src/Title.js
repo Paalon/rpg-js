@@ -15,6 +15,8 @@ let WindowStyle = require('./WindowStyle.js');
 
 let ChoiceText = require('./ChoiceText.js');
 let ChoiceWindow = require('./ChoiceWindow.js');
+let StyledWindow = require('./StyledWindow.js');
+let MessageWindow = require('./MessageWindow.js');
 
 module.exports = class Title extends Scene {
   constructor() {
@@ -56,6 +58,16 @@ module.exports = class Title extends Scene {
             new ChoiceText('はじめから', () => {
               this.lib.sound.fx.start.play();
               this.change.transit('Field');
+            }),
+            new ChoiceText('めっせーじてすと', () => {
+              this.lib.sound.fx.done.play();
+              let mw = new MessageWindow(
+`めっせーじてすとを行っています。
+全部表示したら、なんとこのウィンドウは消えちゃいます。
+さようーならー！！！！
+ばいばい。`
+              );
+              this.addWindow(mw);
             }),
             new ChoiceText('もどる', () => {
               cw.cancel();

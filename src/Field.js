@@ -133,7 +133,43 @@ module.exports = class Field extends Scene {
               this.change.transit('Title');
             }),
             new ChoiceText('サウンド設定', () => {
-              this.addWindow();
+              this.lib.sound.fx.done.play();
+              let soundWindow = new ChoiceWindow(
+                [
+                  new ChoiceText('音楽の設定', () => {
+                    this.lib.sound.fx.done.play();
+                    let bgm = new ChoiceWindow(
+                      [
+                        new ChoiceText('音量を上げる', () => {
+                          this.lib.sound.fx.message.play();
+                        }),
+                        new ChoiceText('音量を下げる', () => {
+                          this.lib.sound.fx.message.play();
+                        })
+                      ],
+                      new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}})
+                    );
+                    this.addWindow(bgm);
+                  }),
+                  new ChoiceText('効果音の設定', () => {
+                    this.lib.sound.fx.done.play();
+                    let fx = new ChoiceWindow(
+                      [
+                        new ChoiceText('音量を上げる', () => {
+                          this.lib.sound.fx.message.play();
+                        }),
+                        new ChoiceText('音量を下げる', () => {
+                          this.lib.sound.fx.message.play();
+                        })
+                      ],
+                      new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}})
+                    );
+                    this.addWindow(fx);
+                  })
+                ],
+                new WindowStyle({x: 50, y: 50, unselected_style: {fontSize: 10, fill: 0xffffff}})
+              );
+              this.addWindow(soundWindow);
             }),
             new ChoiceText('敵と戦う（デバッグ用）', () => {
               this.removeWindow();

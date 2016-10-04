@@ -60,6 +60,11 @@ module.exports = function loadSound() {
     src: ['./sound/start.mp3'],
     preload: true
   });
+  sound.fx.message = new Howler.Howl({
+    src: ['./sound/message.mp3'],
+    preload: true,
+    volume: 0.5
+  });
   // fxの共通の設定
   for (let key in sound.fx) {
     sound.fx[key].on('play', () => {sound.fxNumber++;});
