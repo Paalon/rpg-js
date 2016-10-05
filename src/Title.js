@@ -62,14 +62,12 @@ module.exports = class Title extends Scene {
             new ChoiceText('めっせーじてすと', () => {
               this.lib.sound.fx.done.play();
               let file = FileUtil.loadFile('./message/test.message');
-              let mw = new MessageWindow(file
-                /*
-`めっせーじてすとを行っています。
-全部表示したら、なんとこのウィンドウは消えちゃいます。
-さようーならー！！！！
-ばいばい。`
-              */
-              );
+              let mw = new MessageWindow(file);
+              this.addWindow(mw);
+            }),
+            new ChoiceText('メッセージテスト', () => {
+              this.lib.sound.fx.done.play();
+              let mw = new MessageWindow('まじかよー#line#またねー#wait#ははは#end#');
               this.addWindow(mw);
             }),
             new ChoiceText('もどる', () => {

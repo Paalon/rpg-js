@@ -1,1 +1,1 @@
-wc -l src/*.js ./*.js
+wc -l src/*.js ./*.js message/*.go

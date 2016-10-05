@@ -25,9 +25,15 @@ func main() {
 	wait := Keyword{"wait", "w"}
 	clear := Keyword{"clear", "c"}
 	end := Keyword{"end", "e"}
+	sound := Keyword{"sound", "s"}
+	time := Keyword{"time", "t"}
 
-	keywords := []Keyword{
+	keywords0 := []Keyword{
 		line, rest, wait, clear, end,
+	}
+
+	keywords1 := []Keyword{
+		sound, time,
 	}
 
 	message := string(data)
@@ -38,12 +44,21 @@ func main() {
 	message = strings.Replace(message, "\n", "", -1)
 
 	// shortから先にパース
-	for _, keyword := range keywords {
+	for _, keyword := range keywords0 {
 		rep := regexp.MustCompile(`\$` + keyword.Full + `|\$` + keyword.Short)
 		message = rep.ReplaceAllString(message, "#"+keyword.Full+"#")
 	}
 
-	//fmt.Println(message)
+	for _, keyword := range keywords1 {
+		rep := regexp.MustCompile(`\$` + keyword.Full + `|\$` + keyword.Short)
+		message = rep.ReplaceAllString(message, "#"+keyword.Full+"#")
+	}
+
+	// $$ -> $
+	rep = regexp.MustCompile(`\$\$`)
+	message = rep.ReplaceAllString(message, "$")
+
+	fmt.Println(message)
 
 	// 出力
 	file, err := os.Create(`test.message`)
